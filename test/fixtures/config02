@@ -1,0 +1,11 @@
+Host example
+  HostName example.com
+  User root
+  Port 22
+  IdentityFile /path/to/key
+
+Host example1
+  HostName example1.com
+  User simon
+  Port 1000
+  IdentityFile /path/to/key

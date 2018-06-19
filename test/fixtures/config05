@@ -1,0 +1,7 @@
+# I'd like to travel to lake tahoe.
+Host tahoe1
+  HostName tahoe1.com
+# or whatever place it is.
+# I just need another vocation.
+Host *
+  IdentityFile ~/.ssh/ids/whosyourdaddy

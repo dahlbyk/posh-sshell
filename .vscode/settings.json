@@ -1,4 +1,5 @@
 {
     "editor.rulers": [ 120 ],
-    "powershell.scriptAnalysis.settingsPath": "PSScriptAnalyzerSettings.psd1"
+    "powershell.scriptAnalysis.settingsPath": "PSScriptAnalyzerSettings.psd1",
+    "editor.tabSize": 4
 }

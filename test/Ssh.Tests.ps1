@@ -1,7 +1,6 @@
-. $PSScriptRoot\Shared.ps1
-# Need explicit imports as we're testing some functions not exposed by the module.
+Import-Module $PSScriptRoot\..\posh-ssh.psd1
 . $PSScriptRoot\..\src\Utils.ps1
-. $PSScriptRoot\..\src\GitUtils.ps1
+. $PSScriptRoot\..\src\Win32-OpenSSH.ps1
 
 Describe 'SSH Function Tests' {
     Context 'Get-SshPath Tests' {
@@ -33,8 +32,8 @@ Describe 'SSH Function Tests' {
                 Status = "Stopped"
             }
 
-            $sshCommand = New-Object PSObject -Property @{ 
-                FileVersionInfo = @{ProductVersion="OpenSSH"}; 
+            $sshCommand = New-Object PSObject -Property @{
+                FileVersionInfo = @{ProductVersion="OpenSSH"};
                 Path = "C:\Windows\System32\OpenSSH\ssh.exe"
             }
 
@@ -69,13 +68,13 @@ Describe 'SSH Function Tests' {
             $service.StartType = "Disabled"
             Mock Test-Administrator { return $true }
 
-            $result = Start-NativeSshAgent -Quiet 
+            $result = Start-NativeSshAgent -Quiet
             $result | Should Be $true
 
             Assert-MockCalled Set-Service -Times 1 -Exactly -ParameterFilter { $StartupType -eq "Manual" } -Scope It
             Assert-MockCalled Start-Service -Times 1 -Exactly -Scope It
         }
-        
+
         It "Doesn't enable the service when user is not an admin" {
             $service.StartType = "Disabled"
             Mock Write-Error
@@ -103,7 +102,7 @@ Describe 'SSH Function Tests' {
 
             Mock Get-Command { return $block } -ParameterFilter { $Name -eq "ssh-add" }
 
-            Start-NativeSshAgent -Quiet 
+            Start-NativeSshAgent -Quiet
 
             $script:keysAdded | Should Be $true
         }
@@ -124,30 +123,30 @@ Describe 'SSH Function Tests' {
 
             Mock Get-Command { return $block } -ParameterFilter { $Name -eq "ssh-add" }
 
-            Start-NativeSshAgent -Quiet 
+            Start-NativeSshAgent -Quiet
 
             $script:keysAdded | Should Be $false
         }
         It "Sets the sshCommand in .gitconfig" {
             $service.Status = "Running"
-            
+
             $result = Start-NativeSshAgent -Quiet
-            
-            Assert-MockCalled git -Times 1 -Exactly -ParameterFilter { 
+
+            Assert-MockCalled git -Times 1 -Exactly -ParameterFilter {
                 "$args" -eq 'config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"'
             } -Scope It
         }
 
         It "Doesn't set the sshCommand in .gitconfig if it's already populated" {
             $service.Status = "Running"
-            
+
             Mock git { return "C:/Windows/System32/OpenSSH/ssh.exe" } -ParameterFilter {
                 "$args" -eq "config --global core.sshCommand"
             }
-            
+
             $result = Start-NativeSshAgent -Quiet
-            
-            Assert-MockCalled git -Times 0 -Exactly -ParameterFilter { 
+
+            Assert-MockCalled git -Times 0 -Exactly -ParameterFilter {
                 "$args" -eq 'config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"'
             } -Scope It
         }

@@ -1,6 +1,6 @@
-. $PSScriptRoot\TestHelper.ps1
+. $PSScriptRoot\Shared.ps1
 # Utils is needed so we can mock Get-PsModulePath
-. $PSScriptRoot\..\src\Utils.ps1 
+. $PSScriptRoot\..\src\Utils.ps1
 
 $expectedEncoding = if ($PSVersionTable.PSVersion.Major -le 5) { "utf8" } else { "ascii" }
 

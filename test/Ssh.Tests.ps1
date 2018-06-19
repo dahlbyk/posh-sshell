@@ -1,6 +1,9 @@
-Import-Module $PSScriptRoot\..\posh-ssh.psd1
+. $PSScriptRoot\Shared.ps1
+# Need explicit imports as we're testing some functions not exposed by the module.
 . $PSScriptRoot\..\src\Utils.ps1
 . $PSScriptRoot\..\src\Win32-OpenSSH.ps1
+. $PSScriptRoot\..\src\Keys.ps1
+. $PSScriptRoot\..\src\Agent.ps1
 
 Describe 'SSH Function Tests' {
     Context 'Get-SshPath Tests' {

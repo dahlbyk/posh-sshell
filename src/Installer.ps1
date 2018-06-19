@@ -1,5 +1,5 @@
 # Allows for overriding of module path during test.
-$ModuleBasePath = $PSScriptRoot
+$ModuleBasePath = Convert-Path $PSScriptRoot\..
 
 <#
 .SYNOPSIS

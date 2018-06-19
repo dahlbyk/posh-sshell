@@ -2,6 +2,8 @@
 
 <!--[![posh-git on PowerShell Gallery](https://img.shields.io/powershellgallery/dt/posh-ssh.svg)](https://www.powershellgallery.org/packages/posh-ssh/)-->
 
+[![Build status](https://ci.appveyor.com/api/projects/status/qennndhmb75jab9v?svg=true)](https://ci.appveyor.com/project/JeremySkinner/posh-sshell)
+
 
 Originally part of the [posh-git](https://github.com/dahlbyk/posh-git) project, posh-ssh is a PowerShell module that provides utilities for working with SSH connections within PowerShell.
 

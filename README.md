@@ -1,15 +1,15 @@
-# posh-ssh
+# posh-sshell
 
-<!--[![posh-git on PowerShell Gallery](https://img.shields.io/powershellgallery/dt/posh-ssh.svg)](https://www.powershellgallery.org/packages/posh-ssh/)-->
+<!--[![posh-git on PowerShell Gallery](https://img.shields.io/powershellgallery/dt/posh-sshell.svg)](https://www.powershellgallery.org/packages/posh-sshell/)-->
 
 [![Build status](https://ci.appveyor.com/api/projects/status/qennndhmb75jab9v?svg=true)](https://ci.appveyor.com/project/JeremySkinner/posh-sshell)
 
 
-Originally part of the [posh-git](https://github.com/dahlbyk/posh-git) project, posh-ssh is a PowerShell module that provides utilities for working with SSH connections within PowerShell.
+Originally part of the [posh-git](https://github.com/dahlbyk/posh-git) project, posh-sshell is a PowerShell module that provides utilities for working with SSH connections within PowerShell.
 
 ## Installation
 ### Prerequisites
-Before installing posh-ssh make sure the following prerequisites have been met.
+Before installing posh-sshell make sure the following prerequisites have been met.
 
 1. PowerShell 5 or higher. Check your PowerShell version by executing `$PSVersionTable.PSVersion`.
 
@@ -17,7 +17,7 @@ Before installing posh-ssh make sure the following prerequisites have been met.
    Check the script execution policy setting by executing `Get-ExecutionPolicy`.
    If the policy is not set to one of the two required values, run PowerShell as Administrator and execute `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Confirm`.
 
-### Installing posh-ssh via PowerShellGet
+### Installing posh-sshell via PowerShellGet
 Execute the following command to install from the [PowerShell Gallery](https://www.powershellgallery.com/):
 
 ```powershell
@@ -32,33 +32,33 @@ Import-PackageProvider NuGet -Force
 ```
 Then retry the `Install-Module` command above.
 
-After you have successfully installed the posh-ssh module from the PowerShell Gallery, you will be able to update to a newer version by executing the command:
+After you have successfully installed the posh-sshell module from the PowerShell Gallery, you will be able to update to a newer version by executing the command:
 ```powershell
-Update-Module posh-ssh
+Update-Module posh-sshell
 ```
 
-## Using posh-ssh
-After you have installed posh-ssh, you need to configure your PowerShell session to use the posh-git module.
+## Using posh-sshell
+After you have installed posh-sshell, you need to configure your PowerShell session to use the posh-git module.
 
-### Step 1: Import posh-ssh
+### Step 1: Import posh-sshell
 The first step is to import the module into your PowerShell session which will enable git tab completion.
-You can do this with the command `Import-Module posh-ssh`.
+You can do this with the command `Import-Module posh-sshell`.
 
-### Step 2: Import posh-ssh from Your PowerShell Profile
+### Step 2: Import posh-sshell from Your PowerShell Profile
 You do not want to have to manually execute the `Import-Module` command every time you open a new PowerShell prompt.
 Let's have PowerShell import this module for you in each new PowerShell session.
-We can do this by either executing the command `Add-PoshSshToProfile` or by editing your PowerShell profile script and adding the command `Import-Module posh-ssh`.
+We can do this by either executing the command `Add-PoshSshToProfile` or by editing your PowerShell profile script and adding the command `Import-Module posh-sshell`.
 
-If you want posh-ssh to be available in all your PowerShell hosts (console, ISE, etc) then execute `Add-PoshGitToProfile -AllHosts`.
+If you want posh-sshell to be available in all your PowerShell hosts (console, ISE, etc) then execute `Add-PoshGitToProfile -AllHosts`.
 This will add a line containing `Import-Module posh-git` to the file `$profile.CurrentUserAllHosts`.
-If you want posh-ssh to be available in just the current host, then execute `Add-PoshSshToProfile`.
+If you want posh-sshell to be available in just the current host, then execute `Add-PoshSshToProfile`.
 This will add the same command but to the file `$profile.CurrentUserCurrentHost`.
 
 If you'd prefer, you can manually edit the desired PowerShell profile script.
 Open (or create) your profile script with the command `notepad $profile.CurrentUserAllHosts`.
 In the profile script, add the following line:
 ```powershell
-Import-Module posh-ssh
+Import-Module posh-sshell
 ```
 Save the profile script, then close PowerShell and open a new PowerShell session.
 

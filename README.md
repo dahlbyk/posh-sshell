@@ -21,7 +21,7 @@ Before installing posh-sshell make sure the following prerequisites have been me
 Execute the following command to install from the [PowerShell Gallery](https://www.powershellgallery.com/):
 
 ```powershell
-PowerShellGet\Install-Module NEW_PROJECT_NAME -Scope CurrentUser
+PowerShellGet\Install-Module posh-sshell -Scope CurrentUser
 ```
 You may be asked if you trust packages coming from the PowerShell Gallery. Answer yes to allow installation of this module to proceed.
 

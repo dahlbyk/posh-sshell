@@ -30,7 +30,7 @@ Describe 'Utils Function Tests' {
             Get-FileEncoding $profilePath | Should Be $expectedEncoding
             $content = Get-Content $profilePath
             $content.Count | Should Be 3
-            $nativePath = MakeNativePath $modulePath\posh-ssh.psd1
+            $nativePath = MakeNativePath $modulePath\posh-sshell.psd1
             @($content)[1] | Should BeExactly "Import-Module '$nativePath'"
             @($content)[2] | Should BeExactly "Start-SshAgent -Quiet"
         }
@@ -53,8 +53,8 @@ Describe 'Utils Function Tests' {
             Get-FileEncoding $profilePath | Should Be $expectedEncoding
             $content = Get-Content $profilePath
             $content.Count | Should Be 3
-            $nativePath = MakeNativePath $modulePath\posh-ssh.psd1
-            @($content)[1] | Should BeExactly "Import-Module posh-ssh"
+            $nativePath = MakeNativePath $modulePath\posh-sshell.psd1
+            @($content)[1] | Should BeExactly "Import-Module posh-sshell"
         }
         It 'Creates profile file if the profile dir does not exist' {
             # Use $profilePath as missing parent directory (auto-cleanup)
@@ -66,18 +66,18 @@ Describe 'Utils Function Tests' {
             Add-PoshSshToProfile $childProfilePath
 
             Test-Path -LiteralPath $childProfilePath | Should Be $true
-            $childProfilePath | Should FileContentMatch "^Import-Module .*posh-ssh"
+            $childProfilePath | Should FileContentMatch "^Import-Module .*posh-sshell"
         }
-        It 'Does not modify profile that already refers to posh-ssh' {
+        It 'Does not modify profile that already refers to posh-sshell' {
             $profileContent = @'
 Import-Module PSCX
-Import-Module posh-ssh
+Import-Module posh-sshell
 '@
             Set-Content $profilePath -Value $profileContent -Encoding Ascii
 
             $output = Add-PoshSshToProfile $profilePath 3>&1
 
-            $output[1] | Should Match 'posh-ssh appears'
+            $output[1] | Should Match 'posh-sshell appears'
             Get-FileEncoding $profilePath | Should Be 'ascii'
             $content = Get-Content $profilePath
             $content.Count | Should Be 2
@@ -100,18 +100,18 @@ New-Alias pscore C:\Users\Keith\GitHub\rkeithhill\PowerShell\src\powershell-win-
             $content | % { write-host $_ }
             $content.Count | Should Be 6 # Last line is the start-sshagent
             $nativeContent = Convert-NativeLineEnding $profileContent
-            $nativeContent += "${newLine}${newLine}Import-Module posh-ssh"
+            $nativeContent += "${newLine}${newLine}Import-Module posh-sshell${newLine}Start-SshAgent -Quiet"
             $content -join $newLine | Should BeExactly $nativeContent
         }
-        It 'Adds Start-SshAgent if posh-ssh is not installed' {
+        It 'Adds Start-SshAgent if posh-sshell is not installed' {
             Add-PoshSshToProfile $profilePath -StartSshAgent
 
             Test-Path -LiteralPath $profilePath | Should Be $true
             $last = Get-Content $profilePath | Select-Object -Last 1
             $last | Should BeExactly "Start-SshAgent -Quiet"
         }
-        It 'Does not add Start-SshAgent if posh-ssh is installed' {
-            $profileContent = 'Import-Module posh-ssh'
+        It 'Does not add Start-SshAgent if posh-sshell is installed' {
+            $profileContent = 'Import-Module posh-sshell'
             Set-Content $profilePath -Value $profileContent
 
             Add-PoshSshToProfile $profilePath -StartSshAgent
@@ -130,22 +130,22 @@ New-Alias pscore C:\Users\Keith\GitHub\rkeithhill\PowerShell\src\powershell-win-
         AfterEach {
             Remove-Item $profilePath -ErrorAction SilentlyContinue
         }
-        It 'Detects Import-Module posh-ssh in profile script' {
-            $profileContent = "Import-Module posh-ssh"
+        It 'Detects Import-Module posh-sshell in profile script' {
+            $profileContent = "Import-Module posh-sshell"
             Set-Content $profilePath -Value $profileContent -Encoding Unicode
             Test-PoshSshImportedInScript $profilePath | Should Be $true
         }
         It 'Detects chocolatey installed line in profile script' {
-            $profileContent = ". 'C:\tools\poshssh\dahlbyk-posh-ssh-18d600a\profile.example.ps1"
+            $profileContent = ". 'C:\tools\poshssh\dahlbyk-posh-sshell-18d600a\profile.example.ps1"
             Set-Content $profilePath -Value $profileContent -Encoding Unicode
             Test-PoshSshImportedInScript $profilePath | Should Be $true
         }
-        It 'Returns false when one-line profile script does not import posh-ssh' {
+        It 'Returns false when one-line profile script does not import posh-sshell' {
             $profileContent = "# Test"
             Set-Content $profilePath -Value $profileContent -Encoding Unicode
             Test-PoshSshImportedInScript $profilePath | Should Be $false
         }
-        It 'Returns false when profile script does not import posh-ssh' {
+        It 'Returns false when profile script does not import posh-sshell' {
             $profileContent = "Import-Module Pscx`nImport-Module platyPS`nImport-Module Plaster"
             Set-Content $profilePath -Value $profileContent -Encoding Unicode
             Test-PoshSshImportedInScript $profilePath | Should Be $false
@@ -155,41 +155,41 @@ New-Alias pscore C:\Users\Keith\GitHub\rkeithhill\PowerShell\src\powershell-win-
     Context 'Test-InPSModulePath Tests' {
         It 'Returns false for install not under any PSModulePaths' {
             Mock Get-PSModulePath { }
-            $path = "C:\Users\Keith\Documents\WindowsPowerShell\Modules\posh-ssh\0.7.0\"
+            $path = "C:\Users\Keith\Documents\WindowsPowerShell\Modules\posh-sshell\0.7.0\"
             Test-InPSModulePath $path | Should Be $false
             Assert-MockCalled Get-PSModulePath
         }
         It 'Returns true for install under single PSModulePath' {
             Mock Get-PSModulePath {
-                return MakeNativePath "$HOME\Documents\WindowsPowerShell\Modules\posh-ssh\"
+                return MakeNativePath "$HOME\Documents\WindowsPowerShell\Modules\posh-sshell\"
             }
-            $path = MakeNativePath "$HOME\Documents\WindowsPowerShell\Modules\posh-ssh\0.7.0"
+            $path = MakeNativePath "$HOME\Documents\WindowsPowerShell\Modules\posh-sshell\0.7.0"
             Test-InPSModulePath $path | Should Be $true
             Assert-MockCalled Get-PSModulePath
         }
         It 'Returns true for install under multiple PSModulePaths' {
             Mock Get-PSModulePath {
-                return (MakeNativePath "$HOME\Documents\WindowsPowerShell\Modules\posh-ssh\"),
-                       (MakeNativePath "$HOME\GitHub\dahlbyk\posh-ssh\0.6.1.20160330\")
+                return (MakeNativePath "$HOME\Documents\WindowsPowerShell\Modules\posh-sshell\"),
+                       (MakeNativePath "$HOME\GitHub\dahlbyk\posh-sshell\0.6.1.20160330\")
             }
-            $path = MakeNativePath "$HOME\Documents\WindowsPowerShell\Modules\posh-ssh\0.7.0"
+            $path = MakeNativePath "$HOME\Documents\WindowsPowerShell\Modules\posh-sshell\0.7.0"
             Test-InPSModulePath $path | Should Be $true
             Assert-MockCalled Get-PSModulePath
         }
-        It 'Returns false when current posh-ssh module location is not under PSModulePaths' {
+        It 'Returns false when current posh-sshell module location is not under PSModulePaths' {
             Mock Get-PSModulePath {
-                return (MakeNativePath "$HOME\Documents\WindowsPowerShell\Modules\posh-ssh\"),
-                       (MakeNativePath "$HOME\GitHub\dahlbyk\posh-ssh\0.6.1.20160330\")
+                return (MakeNativePath "$HOME\Documents\WindowsPowerShell\Modules\posh-sshell\"),
+                       (MakeNativePath "$HOME\GitHub\dahlbyk\posh-sshell\0.6.1.20160330\")
             }
-            $path = MakeNativePath "\tools\posh-ssh\dahlbyk-posh-ssh-18d600a"
+            $path = MakeNativePath "\tools\posh-sshell\dahlbyk-posh-sshell-18d600a"
             Test-InPSModulePath $path | Should Be $false
             Assert-MockCalled Get-PSModulePath
         }
-        It 'Returns false when current posh-ssh module location is under PSModulePath, but in a src directory' {
+        It 'Returns false when current posh-sshell module location is under PSModulePath, but in a src directory' {
             Mock Get-PSModulePath {
                 return MakeNativePath '\GitHub'
             }
-            $path = MakeNativePath "\GitHub\posh-ssh\src"
+            $path = MakeNativePath "\GitHub\posh-sshell\src"
             Test-InPSModulePath $path | Should Be $false
             Assert-MockCalled Get-PSModulePath
         }

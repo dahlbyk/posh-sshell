@@ -30,6 +30,6 @@ function MakeNativePath([string]$Path) {
 }
 
 [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssigments', '')]
-$module = Import-Module $PSScriptRoot\..\posh-ssh.psd1
+$module = Import-Module $PSScriptRoot\..\posh-sshell.psd1
 
 $ModulePath = Convert-Path $PSScriptRoot\..

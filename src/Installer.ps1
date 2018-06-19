@@ -3,12 +3,12 @@ $ModuleBasePath = Convert-Path $PSScriptRoot\..
 
 <#
 .SYNOPSIS
-    Configures your PowerShell profile (startup) script to import the posh-ssh
+    Configures your PowerShell profile (startup) script to import the posh-sshell
     module when PowerShell starts.
 .DESCRIPTION
-    Checks if your PowerShell profile script is not already importing posh-ssh
-    and if not, adds a command to import the posh-ssh module. This will cause
-    PowerShell to load posh-ssh whenever PowerShell starts.
+    Checks if your PowerShell profile script is not already importing posh-sshell
+    and if not, adds a command to import the posh-sshell module. This will cause
+    PowerShell to load posh-sshell whenever PowerShell starts.
 .PARAMETER AllHosts
     By default, this command modifies the CurrentUserCurrentHost profile
     script.  By specifying the AllHosts switch, the command updates the
@@ -20,14 +20,14 @@ $ModuleBasePath = Convert-Path $PSScriptRoot\..
     Requires elevated permissions.
 .PARAMETER Force
     Do not check if the specified profile script is already importing
-    posh-ssh. Just add Import-Module posh-ssh command.
+    posh-sshell. Just add Import-Module posh-sshell command.
 .EXAMPLE
     PS C:\> Add-PoshSshToProfile
     Updates your profile script for the current PowerShell host to import the
-    posh-ssh module when the current PowerShell host starts.
+    posh-sshell module when the current PowerShell host starts.
 .EXAMPLE
     PS C:\> Add-PoshSshToProfile -AllHosts
-    Updates your profile script for all PowerShell hosts to import the posh-ssh
+    Updates your profile script for all PowerShell hosts to import the posh-sshell
     module whenever any PowerShell host starts.
 .INPUTS
     None.
@@ -55,7 +55,7 @@ function Add-PoshSshToProfile {
   )
 
   if ($AllUsers -and !(Test-Administrator)) {
-      throw 'Adding posh-ssh to an AllUsers profile requires an elevated host.'
+      throw 'Adding posh-sshell to an AllUsers profile requires an elevated host.'
   }
 
   $underTest = $false
@@ -79,7 +79,7 @@ function Add-PoshSshToProfile {
   if (!$profilePath) { $profilePath = $PROFILE }
 
   if (!$Force) {
-      # Search the user's profiles to see if any are using posh-ssh already, there is an extra search
+      # Search the user's profiles to see if any are using posh-sshell already, there is an extra search
       # ($profilePath) taking place to accomodate the Pester tests.
       $importedInProfile = Test-PoshSshImportedInScript $profilePath
       if (!$importedInProfile -and !$underTest) {
@@ -99,15 +99,15 @@ function Add-PoshSshToProfile {
       }
 
       if ($importedInProfile) {
-          Write-Warning "Skipping add of posh-ssh import to file '$profilePath'."
-          Write-Warning "posh-ssh appears to already be imported in one of your profile scripts."
+          Write-Warning "Skipping add of posh-sshell import to file '$profilePath'."
+          Write-Warning "posh-sshell appears to already be imported in one of your profile scripts."
           Write-Warning "If you want to force the add, use the -Force parameter."
           return
       }
   }
 
   if (!$profilePath) {
-      Write-Warning "Skipping add of posh-ssh import to profile; no profile found."
+      Write-Warning "Skipping add of posh-sshell import to profile; no profile found."
       Write-Verbose "`$PROFILE              = '$PROFILE'"
       Write-Verbose "CurrentUserCurrentHost = '$($PROFILE.CurrentUserCurrentHost)'"
       Write-Verbose "CurrentUserAllHosts    = '$($PROFILE.CurrentUserAllHosts)'"
@@ -124,8 +124,8 @@ function Add-PoshSshToProfile {
       else {
           $sig = Get-AuthenticodeSignature $profilePath
           if ($null -ne $sig.SignerCertificate) {
-              Write-Warning "Skipping add of posh-ssh import to profile; '$profilePath' appears to be signed."
-              Write-Warning "Add the command 'Import-Module posh-ssh' to your profile and resign it."
+              Write-Warning "Skipping add of posh-sshell import to profile; '$profilePath' appears to be signed."
+              Write-Warning "Add the command 'Import-Module posh-sshell' to your profile and resign it."
               return
           }
       }
@@ -133,10 +133,10 @@ function Add-PoshSshToProfile {
 
   # Check if the location of this module file is in the PSModulePath
   if (Test-InPSModulePath $ModuleBasePath) {
-      $profileContent = "`nImport-Module posh-ssh"
+      $profileContent = "`nImport-Module posh-sshell"
   }
   else {
-      $modulePath = Join-Path $ModuleBasePath posh-ssh.psd1
+      $modulePath = Join-Path $ModuleBasePath posh-sshell.psd1
       $profileContent = "`nImport-Module '$modulePath'"
   }
 
@@ -148,7 +148,7 @@ function Add-PoshSshToProfile {
       }
   }
 
-  if ($PSCmdlet.ShouldProcess($profilePath, "Add 'Import-Module posh-ssh' to profile")) {
+  if ($PSCmdlet.ShouldProcess($profilePath, "Add 'Import-Module posh-sshell' to profile")) {
       Add-Content -LiteralPath $profilePath -Value $profileContent -Encoding UTF8
   }
 

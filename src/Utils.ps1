@@ -54,7 +54,7 @@ function Test-PoshSshImportedInScript {
     }
 
     $match = (@(Get-Content $Path -ErrorAction SilentlyContinue) -match 'posh-ssh').Count -gt 0
-    if ($match) { Write-Verbose "posh-ssh found in '$Path'" }
+    if ($match) { Write-Verbose "posh-sshell found in '$Path'" }
     $match
 }
 

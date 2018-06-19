@@ -1,4 +1,4 @@
-# posh-ssh Release History
+# posh-sshell Release History
 
 ## 0.1
 

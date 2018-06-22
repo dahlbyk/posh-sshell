@@ -1,2 +1,8 @@
+param(
+    [switch]
+    $full
+)
 powershell -noprofile -command Invoke-Pester $args
-pwsh -noprofile -command Invoke-Pester
+if ($full) {
+    pwsh -noprofile -command Invoke-Pester
+}

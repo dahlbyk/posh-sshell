@@ -8,18 +8,18 @@
 Describe 'SSH Function Tests' {
     Context 'Get-SshPath Tests' {
         It 'Returns the correct default path' {
-            Get-SshPath | Should BeExactly (MakeNativePath $Home\.ssh\id_rsa)
+            Get-SshPath | Should -BeExactly (MakeNativePath $Home\.ssh\id_rsa)
         }
         It 'Returns the correct path for a given filename' {
             $filename = 'xyzzy-eb2ff0a9-81ee-4983-b32d-530286600a51'
-            Get-SshPath $filename | Should BeExactly (MakeNativePath $Home\.ssh\$filename)
+            Get-SshPath $filename | Should -BeExactly (MakeNativePath $Home\.ssh\$filename)
         }
         It 'Returns the correct path, given $Env:Home is not defined ($null)' {
             $origEnvHome = $Env:HOME
             try {
                 Remove-Item Env:\Home -ErrorAction SilentlyContinue
-                $Env:Home | Should BeNullOrEmpty
-                Get-SshPath | Should BeExactly (MakeNativePath $Home\.ssh\id_rsa)
+                $Env:Home | Should -BeNullOrEmpty
+                Get-SshPath | Should -BeExactly (MakeNativePath $Home\.ssh\id_rsa)
             }
             finally {
                 Set-Item Env:\HOME -Value $origEnvHome
@@ -57,13 +57,13 @@ Describe 'SSH Function Tests' {
         It "Finds the service" {
             $result = Get-NativeSshAgent
             $result | Should Not Be $null
-            $result.Name | Should Be "ssh-agent"
+            $result.Name | Should -Be "ssh-agent"
         }
 
         It "Starts the service when stopped and user is admin" {
             Mock Test-Administrator { return $true }
             $result = Start-NativeSshAgent -Quiet
-            $result | Should Be $true
+            $result | Should -Be $true
             Assert-MockCalled Start-Service -Times 1 -Exactly -Scope It
         }
 
@@ -72,7 +72,7 @@ Describe 'SSH Function Tests' {
             Mock Test-Administrator { return $true }
 
             $result = Start-NativeSshAgent -Quiet
-            $result | Should Be $true
+            $result | Should -Be $true
 
             Assert-MockCalled Set-Service -Times 1 -Exactly -ParameterFilter { $StartupType -eq "Manual" } -Scope It
             Assert-MockCalled Start-Service -Times 1 -Exactly -Scope It
@@ -83,7 +83,7 @@ Describe 'SSH Function Tests' {
             Mock Write-Error
 
             $result = Start-NativeSshAgent
-            $result | Should Be $true
+            $result | Should -Be $true
 
             Assert-MockCalled Start-Service -Times 0 -Exactly -ParameterFilter { $StartupType -eq "Manual" } -Scope It
             Assert-MockCalled Write-Error -ParameterFilter { $Message -eq "The ssh-agent service is disabled. Please start the service and try again." } -Scope It
@@ -107,7 +107,7 @@ Describe 'SSH Function Tests' {
 
             Start-NativeSshAgent -Quiet
 
-            $script:keysAdded | Should Be $true
+            $script:keysAdded | Should -Be $true
         }
 
         It "Doesn't add keys if already added" {
@@ -128,7 +128,7 @@ Describe 'SSH Function Tests' {
 
             Start-NativeSshAgent -Quiet
 
-            $script:keysAdded | Should Be $false
+            $script:keysAdded | Should -Be $false
         }
         It "Sets the sshCommand in .gitconfig" {
             $service.Status = "Running"

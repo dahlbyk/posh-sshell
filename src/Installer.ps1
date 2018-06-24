@@ -21,6 +21,8 @@ $ModuleBasePath = Convert-Path $PSScriptRoot\..
 .PARAMETER Force
     Do not check if the specified profile script is already importing
     posh-sshell. Just add Import-Module posh-sshell command.
+.PARAMETER StartSshAgent
+    Also add `Start-SshAgent -Quiet` to the specified profile script.
 .EXAMPLE
     PS C:\> Add-PoshSshToProfile
     Updates your profile script for the current PowerShell host to import the
@@ -48,6 +50,10 @@ function Add-PoshSshToProfile {
       [Parameter()]
       [switch]
       $Force,
+
+      [Parameter()]
+      [switch]
+      $StartSshAgent,
 
       [Parameter(ValueFromRemainingArguments)]
       [psobject[]]
@@ -152,8 +158,6 @@ function Add-PoshSshToProfile {
       Add-Content -LiteralPath $profilePath -Value $profileContent -Encoding UTF8
   }
 
-  $StartSshAgent = $true
-  
   if ($StartSshAgent -and $PSCmdlet.ShouldProcess($profilePath, "Add 'Start-SshAgent -Quiet' to profile")) {
     Add-Content -LiteralPath $profilePath -Value 'Start-SshAgent -Quiet' -Encoding UTF8
   }

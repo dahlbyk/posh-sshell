@@ -27,7 +27,4 @@ function MakeNativePath([string]$Path) {
   $Path -replace '\\|/', [System.IO.Path]::DirectorySeparatorChar
 }
 
-# [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssigments', '')]
-# $module = Import-Module $PSScriptRoot\..\posh-sshell.psd1
-
 $ModulePath = Convert-Path $PSScriptRoot\..

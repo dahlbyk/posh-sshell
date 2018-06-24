@@ -28,6 +28,10 @@ Describe 'SSH Function Tests' {
     }
 
     Context "Win32-OpenSSH Tests" {
+        # Do not attempt to run Win32-OpenSSH tests on mac/linux.
+        $windows = (($PSVersionTable.PSVersion.Major -lt 6) -or $IsWindows)
+        if (!$windows) { return }
+
         BeforeEach {
             $service = New-Object PSObject -Property @{
                 Name = "ssh-agent"

@@ -51,5 +51,5 @@ test_script:
           Write-Host 'CA_KEY not set! (Expected on PR builds.)'
           return;
       }
-      $coverageResult = Format-Coverage -Include (gci ..\* -include *.ps1,*.psm1) -CoverallsApiToken $ENV:CA_KEY -RootFolder ../ -BranchName $ENV:APPVEYOR_REPO_BRANCH
+      $coverageResult = Format-Coverage -Include (@(gci *.psm1) + @(gci src/*.ps1)) -CoverallsApiToken $ENV:CA_KEY -RootFolder ../ -BranchName $ENV:APPVEYOR_REPO_BRANCH
       Publish-Coverage -Coverage $coverageResult

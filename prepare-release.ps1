@@ -37,8 +37,8 @@ Write-Host "Creating branch $branch for release..."
 git checkout -b $branch | Out-Null
 
 # Update the release notes and license URL
-$module = $module -replace "https://github.com/dahlbyk/posh-sshell/blob/master/LICENSE.txt", "https://github.com/dahlbyk/posh-sshell/blob/$branch/LICENSE.txt"
-$module = $module -replace "https://github.com/dahlbyk/posh-sshell/blob/master/CHANGELOG.md", "https://github.com/dahlbyk/posh-sshell/blob/$branch/CHANGELOG.md"
+$module = $module -replace "https://github.com/dahlbyk/posh-sshell/blob/master/LICENSE.txt", "https://github.com/dahlbyk/posh-sshell/blob/v$Version/LICENSE.txt"
+$module = $module -replace "https://github.com/dahlbyk/posh-sshell/blob/master/CHANGELOG.md", "https://github.com/dahlbyk/posh-sshell/blob/v$Version/CHANGELOG.md"
 
 # Remove the Prerelease info.
 if (!$Prerelease) {

@@ -24,11 +24,11 @@ $ModuleBasePath = Convert-Path $PSScriptRoot\..
 .PARAMETER StartSshAgent
     Also add `Start-SshAgent -Quiet` to the specified profile script.
 .EXAMPLE
-    PS C:\> Add-PoshSshToProfile
+    PS C:\> Add-PoshSshellToProfile
     Updates your profile script for the current PowerShell host to import the
     posh-sshell module when the current PowerShell host starts.
 .EXAMPLE
-    PS C:\> Add-PoshSshToProfile -AllHosts
+    PS C:\> Add-PoshSshellToProfile -AllHosts
     Updates your profile script for all PowerShell hosts to import the posh-sshell
     module whenever any PowerShell host starts.
 .INPUTS
@@ -36,7 +36,7 @@ $ModuleBasePath = Convert-Path $PSScriptRoot\..
 .OUTPUTS
     None.
 #>
-function Add-PoshSshToProfile {
+function Add-PoshSshellToProfile {
   [CmdletBinding(SupportsShouldProcess)]
   param(
       [Parameter()]

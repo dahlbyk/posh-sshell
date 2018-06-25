@@ -11,4 +11,4 @@ if (!(Get-NativeSshAgent)) {
     Get-TempEnv 'SSH_AUTH_SOCK'
 }
 
-Export-ModuleMember -Function Get-SshAgent, Start-SshAgent, Stop-SshAgent, Add-SshKey, Get-SshPath, Add-PoshSshToProfile
+Export-ModuleMember -Function Get-SshAgent, Start-SshAgent, Stop-SshAgent, Add-SshKey, Get-SshPath, Add-PoshSshellToProfile

@@ -1,4 +1,4 @@
-# This must global in order to be accessible in posh-git module scope
+# This must global in order to be accessible in posh-sshell module scope
 function global:Convert-NativeLineEnding([string]$content, [switch]$SplitLines) {
   $tmp = $content -split "`n" | ForEach-Object { $_.TrimEnd("`r")}
   if ($SplitLines) {

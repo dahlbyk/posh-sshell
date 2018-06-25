@@ -1,6 +1,6 @@
 # posh-sshell
 
-<!--[![posh-git on PowerShell Gallery](https://img.shields.io/powershellgallery/dt/posh-sshell.svg)](https://www.powershellgallery.org/packages/posh-sshell/)-->
+<!--[![posh-sshell on PowerShell Gallery](https://img.shields.io/powershellgallery/dt/posh-sshell.svg)](https://www.powershellgallery.org/packages/posh-sshell/)-->
 
 [![Build status](https://ci.appveyor.com/api/projects/status/e7t4cexf6xx33qv3?svg=true)](https://ci.appveyor.com/project/JeremySkinner/posh-sshell) [![Build status](https://ci.appveyor.com/api/projects/status/k6mbcfgckr3og2a7?svg=true&passingText=Linux%20-%20passing&failingText=Linux%20-%20failed&pendingText=Linux%20-%20pending)](https://ci.appveyor.com/project/JeremySkinner/posh-sshell-agkhg) [![Coverage Status](https://coveralls.io/repos/github/dahlbyk/posh-sshell/badge.svg?branch=master)](https://coveralls.io/github/dahlbyk/posh-sshell?branch=master)
 
@@ -38,10 +38,10 @@ Update-Module posh-sshell
 ```
 
 ## Using posh-sshell
-After you have installed posh-sshell, you need to configure your PowerShell session to use the posh-git module.
+After you have installed posh-sshell, you need to configure your PowerShell session to use the posh-sshell module.
 
 ### Step 1: Import posh-sshell
-The first step is to import the module into your PowerShell session which will enable git tab completion.
+The first step is to import the module into your PowerShell session.
 You can do this with the command `Import-Module posh-sshell`.
 
 ### Step 2: Import posh-sshell from Your PowerShell Profile
@@ -49,8 +49,8 @@ You do not want to have to manually execute the `Import-Module` command every ti
 Let's have PowerShell import this module for you in each new PowerShell session.
 We can do this by either executing the command `Add-PoshSshToProfile` or by editing your PowerShell profile script and adding the command `Import-Module posh-sshell`.
 
-If you want posh-sshell to be available in all your PowerShell hosts (console, ISE, etc) then execute `Add-PoshGitToProfile -AllHosts`.
-This will add a line containing `Import-Module posh-git` to the file `$profile.CurrentUserAllHosts`.
+If you want posh-sshell to be available in all your PowerShell hosts (console, ISE, etc) then execute `Add-PoshSshToProfile -AllHosts`.
+This will add a line containing `Import-Module posh-sshell` to the file `$profile.CurrentUserAllHosts`.
 If you want posh-sshell to be available in just the current host, then execute `Add-PoshSshToProfile`.
 This will add the same command but to the file `$profile.CurrentUserCurrentHost`.
 

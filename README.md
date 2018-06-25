@@ -47,11 +47,11 @@ You can do this with the command `Import-Module posh-sshell`.
 ### Step 2: Import posh-sshell from Your PowerShell Profile
 You do not want to have to manually execute the `Import-Module` command every time you open a new PowerShell prompt.
 Let's have PowerShell import this module for you in each new PowerShell session.
-We can do this by either executing the command `Add-PoshSshToProfile` or by editing your PowerShell profile script and adding the command `Import-Module posh-sshell`.
+We can do this by either executing the command `Add-PoshSshellToProfile` or by editing your PowerShell profile script and adding the command `Import-Module posh-sshell`.
 
-If you want posh-sshell to be available in all your PowerShell hosts (console, ISE, etc) then execute `Add-PoshSshToProfile -AllHosts`.
+If you want posh-sshell to be available in all your PowerShell hosts (console, ISE, etc) then execute `Add-PoshSshellToProfile -AllHosts`.
 This will add a line containing `Import-Module posh-sshell` to the file `$profile.CurrentUserAllHosts`.
-If you want posh-sshell to be available in just the current host, then execute `Add-PoshSshToProfile`.
+If you want posh-sshell to be available in just the current host, then execute `Add-PoshSshellToProfile`.
 This will add the same command but to the file `$profile.CurrentUserCurrentHost`.
 
 If you'd prefer, you can manually edit the desired PowerShell profile script.

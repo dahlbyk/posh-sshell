@@ -6,7 +6,7 @@
 $expectedEncoding = if ($PSVersionTable.PSVersion.Major -le 5) { "utf8" } else { "ascii" }
 
 Describe 'Utils Function Tests' {
-    Context 'Add-PoshSshToProfile Tests' {
+    Context 'Add-PoshSshellToProfile Tests' {
         BeforeAll {
             [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssigments', '')]
             $newLine = [System.Environment]::NewLine
@@ -25,7 +25,7 @@ Describe 'Utils Function Tests' {
             Remove-Item -LiteralPath $profilePath
             Test-Path -LiteralPath $profilePath | Should -Be $false
 
-            Add-PoshSshToProfile $profilePath
+            Add-PoshSshellToProfile $profilePath
 
             Test-Path -LiteralPath $profilePath | Should -Be $true
             Get-FileEncoding $profilePath | Should -Be $expectedEncoding
@@ -41,7 +41,7 @@ Describe 'Utils Function Tests' {
             Remove-Item -LiteralPath $profilePath
             Test-Path -LiteralPath $profilePath | Should -Be $false
 
-            Add-PoshSshToProfile $profilePath -StartSshAgent
+            Add-PoshSshellToProfile $profilePath -StartSshAgent
 
             Test-Path -LiteralPath $profilePath | Should -Be $true
             Get-FileEncoding $profilePath | Should -Be $expectedEncoding
@@ -64,7 +64,7 @@ Describe 'Utils Function Tests' {
             Remove-Item -LiteralPath $profilePath
             Test-Path -LiteralPath $profilePath | Should -Be $false
 
-            Add-PoshSshToProfile $profilePath $parentDir
+            Add-PoshSshellToProfile $profilePath $parentDir
 
             Test-Path -LiteralPath $profilePath | Should -Be $true
             Get-FileEncoding $profilePath | Should -Be $expectedEncoding
@@ -79,7 +79,7 @@ Describe 'Utils Function Tests' {
 
             $childProfilePath = Join-Path $profilePath profile.ps1
 
-            Add-PoshSshToProfile $childProfilePath
+            Add-PoshSshellToProfile $childProfilePath
 
             Test-Path -LiteralPath $childProfilePath | Should -Be $true
             $childProfilePath | Should FileContentMatch "^Import-Module .*posh-sshell"
@@ -91,7 +91,7 @@ Import-Module posh-sshell
 '@
             Set-Content $profilePath -Value $profileContent -Encoding Ascii
 
-            $output = Add-PoshSshToProfile $profilePath 3>&1
+            $output = Add-PoshSshellToProfile $profilePath 3>&1
 
             $output[1] | Should Match 'posh-sshell appears'
             Get-FileEncoding $profilePath | Should -Be 'ascii'
@@ -108,7 +108,7 @@ New-Alias pscore C:\Users\Keith\GitHub\rkeithhill\PowerShell\src\powershell-win-
 '@
             Set-Content $profilePath -Value $profileContent -Encoding Unicode
 
-            Add-PoshSshToProfile $profilePath (Split-Path $profilePath -Parent)
+            Add-PoshSshellToProfile $profilePath (Split-Path $profilePath -Parent)
 
             Test-Path -LiteralPath $profilePath | Should -Be $true
             Get-FileEncoding $profilePath | Should -Be 'unicode'
@@ -119,7 +119,7 @@ New-Alias pscore C:\Users\Keith\GitHub\rkeithhill\PowerShell\src\powershell-win-
             $content -join $newLine | Should -BeExactly $nativeContent
         }
         It 'Adds Start-SshAgent if posh-sshell is not installed' {
-            Add-PoshSshToProfile $profilePath -StartSshAgent
+            Add-PoshSshellToProfile $profilePath -StartSshAgent
 
             Test-Path -LiteralPath $profilePath | Should -Be $true
             $last = Get-Content $profilePath | Select-Object -Last 1
@@ -129,7 +129,7 @@ New-Alias pscore C:\Users\Keith\GitHub\rkeithhill\PowerShell\src\powershell-win-
             $profileContent = 'Import-Module posh-sshell'
             Set-Content $profilePath -Value $profileContent
 
-            Add-PoshSshToProfile $profilePath -StartSshAgent
+            Add-PoshSshellToProfile $profilePath -StartSshAgent
 
             Test-Path -LiteralPath $profilePath | Should -Be $true
             $content = Get-Content $profilePath

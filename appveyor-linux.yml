@@ -20,9 +20,12 @@ install:
 
 build: false
 
+# Coveralls doesn't install cleanly on linux because of casing issues.
+# The module is registered on PS Gallery as "coveralls", but the module file is "Coveralls.psd1"
+# so PS on linux won't find it. Explicitly import the module instead
 before_test:
-  - ps: Install-Module Coveralls -MinimumVersion 1.0.5 -Scope CurrentUser -Force
-  - ps: Import-Module Coveralls
+  - ps: Install-Module Coveralls -MinimumVersion 1.0.25 -MaximumVersion 1.0.25 -Scope CurrentUser -Force
+  - ps: Import-Module (Resolve-Path "~/.local/share/powershell/Modules/coveralls/1.0.25/Coveralls.psd1")
 
 test_script:
   - ps: |

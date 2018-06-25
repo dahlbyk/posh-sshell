@@ -17,7 +17,13 @@ function global:git {
     switch ($cmdline) {
         '--version' { 'git version 2.11.0.windows.1' }
         default     {
-            $res = Invoke-Expression "git.exe $cmdline"
+            $res = null
+            if (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows) {
+                $res = Invoke-Expression "git.exe $cmdline"
+            }
+            else {
+                $res = Invoke-Expression "git $cmdline"
+            }
             $res
         }
     }

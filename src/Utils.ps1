@@ -79,7 +79,7 @@ function Test-InPSModulePath {
     $inModulePath = @($modulePaths | Where-Object { $Path.StartsWith($_.TrimEnd([System.IO.Path]::DirectorySeparatorChar), $pathStringComparison) }).Count -gt 0
 
     if ($inModulePath -and ('src' -eq (Split-Path $Path -Leaf))) {
-        Write-Warning 'posh-git repository structure is incompatible with %PSModulePath%.'
+        Write-Warning 'posh-sshell repository structure is incompatible with %PSModulePath%.'
         Write-Warning 'Importing with absolute path instead.'
         return $false
     }

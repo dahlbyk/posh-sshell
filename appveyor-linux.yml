@@ -13,7 +13,6 @@ init:
 
 install:
   - ps: |
-      Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null
       Install-Module Pester -MinimumVersion 4.0.8 -MaximumVersion 4.99.99 -Scope CurrentUser -Force | Out-Null
       "Git version: $(git --version)"
       "PSVersion:   $($PSVersionTable.PSVersion), build: $($PSVersionTable.BuildVersion), clr version: $($PSVersionTable.ClrVersion)"
@@ -22,8 +21,7 @@ install:
 build: false
 
 before_test:
-  - ps: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-  - ps: Install-Module Coveralls -MinimumVersion 1.0.5 -Scope CurrentUser
+  - ps: Install-Module Coveralls -MinimumVersion 1.0.5 -Scope CurrentUser -Force
   - ps: Import-Module Coveralls
 
 test_script:

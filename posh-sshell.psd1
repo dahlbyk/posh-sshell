@@ -4,7 +4,7 @@
   RootModule = 'posh-sshell.psm1'
 
   # Version number of this module.
-  ModuleVersion = '0.1'
+  ModuleVersion = '0.1.0'
 
   # ID used to uniquely identify this module
   GUID = '2716974a-b8d1-440d-acdd-3e28d83e18d4'

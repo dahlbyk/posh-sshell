@@ -1,10 +1,6 @@
 os:
   - "Ubuntu"
 
-environment:
-  CA_KEY:
-    secure: coNAepwqm5KC1dqYwQvxPxw/qvxI7RuhCBTHZujJUufj3pI+KqIOCKs5Z86uzHvf
-
 branches:
   only:
     - master
@@ -19,13 +15,6 @@ install:
       "Host name:   $($Host.Name)"
 
 build: false
-
-# Coveralls doesn't install cleanly on linux because of casing issues.
-# The module is registered on PS Gallery as "coveralls", but the module file is "Coveralls.psd1"
-# so PS on linux won't find it. Explicitly import the module instead
-before_test:
-  - ps: Install-Module Coveralls -MinimumVersion 1.0.25 -MaximumVersion 1.0.25 -Scope CurrentUser -Force
-  - ps: Import-Module (Resolve-Path "~/.local/share/powershell/Modules/coveralls/1.0.25/Coveralls.psd1")
 
 test_script:
   - ps: |
@@ -48,9 +37,3 @@ test_script:
           exit 1;
       }
       $ErrorActionPreference = 'Stop'
-      if (!(Test-Path Env:CA_KEY)) {
-          Write-Host 'CA_KEY not set! (Expected on PR builds.)'
-          return;
-      }
-      $coverageResult = Format-Coverage -Include (@(gci *.psm1) + @(gci src/*.ps1)) -CoverallsApiToken $ENV:CA_KEY -RootFolder ../ -BranchName $ENV:APPVEYOR_REPO_BRANCH
-      Publish-Coverage -Coverage $coverageResult

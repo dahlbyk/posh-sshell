@@ -175,7 +175,6 @@ describe "Config Parser" {
     }
     It "Appends new lines" {
         $cfg = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config02"
-
         $o = @{
             Host = "example2.com"
             User = "pegg"
@@ -200,7 +199,7 @@ describe "Config Parser" {
         # Force alphabetical on parameter name.
         $children = $result.Config.Nodes | Sort-Object -Property 'Param'
 
-        $c1 = $rchildren[0];
+        $c1 = $children[0];
         $c2 = $children[1];
 
         $c1.Type| Should -Be "Directive"

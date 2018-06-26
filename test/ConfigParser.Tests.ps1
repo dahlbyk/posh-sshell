@@ -5,7 +5,7 @@ $newLine = "`n" # [System.Environment]::NewLine
 describe "Config Parser" {
 
     It "Parses simple config" {
-        $cfg = Get-SshConfig -Raw -Path "fixtures\config"
+        $cfg = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config"
 
         $cfg.Nodes.Count| Should -Be 7
         $cfg.Nodes[0].Param| Should -Be "ControlMaster"
@@ -36,7 +36,7 @@ describe "Config Parser" {
         $childConfig.Nodes[1].Value| Should -Be "yes"
     }
     It "Parses config with parameters and values separated by equal" {
-        $cfg = Get-SshConfig -Raw -Path "fixtures\config04"
+        $cfg = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config04"
 
         $n = $cfg.Nodes[0];
 
@@ -64,7 +64,7 @@ describe "Config Parser" {
         $c2.Value| Should -Be "keanu"
     }
     It "Parses comments" {
-        $cfg = Get-SshConfig -Raw -Path "fixtures\config05"
+        $cfg = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config05"
         $cfg.Nodes[0].Type| Should -Be "Comment"
         $cfg.Nodes[0].Content| Should -Be "# I'd like to travel to lake tahoe."
 
@@ -73,7 +73,7 @@ describe "Config Parser" {
         $cfg.Nodes[1].Config.Nodes[1].Content| Should -Be "# or whatever place it is."
     }
     It "Parses multiple identityFiles" {
-        $cfg = Get-SshConfig -Raw -Path "fixtures\config06"
+        $cfg = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config06"
 
         $cfg.Nodes[1].Param| Should -Be "IdentityFile"
         $cfg.Nodes[1].Value| Should -Be "~/.ssh/ids/%h/%r/id_rsa"
@@ -85,7 +85,7 @@ describe "Config Parser" {
         $cfg.Nodes[3].Value| Should -Be "~/.ssh/id_rsa"
     }
     It "Parses IdentityFile with spaces" {
-        $cfg = Get-SshConfig -Raw -Path "fixtures\config07"
+        $cfg = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config07"
 
         $cfg.Nodes[0].Param| Should -Be "IdentityFile"
         $cfg.Nodes[0].Value| Should -Be "C:\Users\fname lname\.ssh\id_rsa"
@@ -94,32 +94,32 @@ describe "Config Parser" {
         $cfg.Nodes[1].Value| Should -Be "C:\Users\fname lname\.ssh\id_rsa"
     }
     It "Parses host with double quotes" {
-        $config = Get-SshConfig -Raw -Path "fixtures\config08"
+        $config = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config08"
 
         $config.Nodes[0].Param| Should -Be "Host"
         $config.Nodes[0].Value| Should -Be 'foo "!*.bar"'
     }
     It "Converts object back to string" {
-        $fixture = Get-Content -Raw "fixtures\config"
-        $config = Get-SshConfig -Raw -Path "fixtures\config"
+        $fixture = Get-Content -Raw "$PSScriptRoot\fixtures\config"
+        $config = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config"
         $config.Stringify() | Should -Be $fixture
     }
     It "Converts to string with whitespace and comments in place" {
-        $fixture = Get-Content -Raw "fixtures\config09"
-        $config = Get-SshConfig -Raw -Path "fixtures\config09"
+        $fixture = Get-Content -Raw "$PSScriptRoot\fixtures\config09"
+        $config = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config09"
         $config.Stringify()| Should -Be $fixture
     }
     It "Converts IdentityFile entires with double quotes to string" {
-        $fixture = Get-Content -Raw "fixtures\config10"
-        $config = Get-SshConfig -Raw -Path "fixtures\config10"
+        $fixture = Get-Content -Raw "$PSScriptRoot\fixtures\config10"
+        $config = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config10"
         $config.Stringify() | Should -Be $fixture
     }
     It "Find returns null when none found" {
-        $config = Get-SshConfig -Raw -Path "fixtures\config"
+        $config = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config"
         $config.Find("not.exist") | Should -Be $null
     }
     It "Finds by host" {
-        $config = Get-SshConfig -Raw -Path "fixtures\config"
+        $config = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config"
 
         $result = $config.Find("tahoe1")
         $result.Type| Should -Be "Directive"
@@ -163,7 +163,7 @@ describe "Config Parser" {
     }
 
     It "Removes by host" {
-        $config = Get-SshConfig -Raw -Path "fixtures\config"
+        $config = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config"
         $length = $config.Nodes.Count
 
         $config.RemoveHost("no.such.host")
@@ -174,7 +174,7 @@ describe "Config Parser" {
         $config.Nodes.Count| Should -Be ($length - 1)
     }
     It "Appends new lines" {
-        $cfg = Get-SshConfig -Raw -Path "fixtures\config02"
+        $cfg = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config02"
 
         $o = @{
             Host = "example2.com"
@@ -218,7 +218,7 @@ describe "Config Parser" {
         $c2.Value| Should -Be "pegg"
     }
     It "Appends with original indentation recognised" {
-        $cfg = Get-SshConfig -Raw -Path "fixtures\config03"
+        $cfg = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config03"
 
         $cfg.Add(@{Host = "example3.com"; User = "paul"});
 
@@ -246,7 +246,7 @@ describe "Config Parser" {
             Port = "123"
         }
 
-        $cfg = Get-SshConfig -Raw -Path "fixtures\config"
+        $cfg = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config"
         $cfg.Add($d);
 
         $h = $cfg.Find("test1")
@@ -262,7 +262,7 @@ describe "Config Parser" {
     }
 
     It "Gets result by host with globbing" {
-        $config = Get-SshConfig -Raw -Path "fixtures\config"
+        $config = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config"
         $opts = $config.Compute("tahoe2");
 
         $opts["User"] | Should -Be "nil"
@@ -289,7 +289,7 @@ describe "Config Parser" {
         $opts.ForwardAgent | Should -Be "true"
     }
     It "Gets by host with globbing" {
-        $config = Get-SshConfig -Raw -Path "fixtures\config02"
+        $config = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config02"
         $result = $config.Compute("example1")
         $result["Host"] | Should -Be "example1"
         $result["HostName"] | Should -Be "example1.com"

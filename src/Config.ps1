@@ -65,9 +65,12 @@ function Get-SshConfig {
 #>
 function Connect-Ssh {
     param(
-        [Parameter()]
+        [Parameter(Position = 0)]
         [string]
-        $Name
+        $Name,
+
+        [Parameter()]
+        $Command = (Get-Command ssh)
     )
 
     # If a name is specified, then find the matching config entry
@@ -75,7 +78,7 @@ function Connect-Ssh {
         $match = Get-SshConfig $Name
 
         if($match) {
-            ssh $match["HostName"]
+            & $Command $match["HostName"]
             return
         }
         else {
@@ -120,7 +123,7 @@ function Connect-Ssh {
         if ($index) {
             $selected = $config[$index - 1]
             if ($selected) {
-                ssh $selected["HostName"]
+                & $Command $selected["HostName"]
             }
         }
     }
@@ -128,7 +131,7 @@ function Connect-Ssh {
         # User entered a string. Find hostname instead.
         $selected = $config | Where-Object { $_["Host"] -eq $userInput } | Select-Object -First 1
         if($selected) {
-            ssh $selected["HostName"]
+            & $Command $selected["HostName"]
         }
     }
 }

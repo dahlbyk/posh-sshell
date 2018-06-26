@@ -205,13 +205,13 @@ describe "Config Parser" {
         $c1.Type| Should -Be "Directive"
         $c1.Before| Should -Be "  "
         $c1.Param| Should -Be "IdentityFile"
-        $c1.After| Should -Be $newLine
+        $c1.After.StartsWith($newLine) | Should -be $true
         $c1.Separator| Should -Be " "
         $c1.Value| Should -Be "~/.ssh/id_rsa"
 
         $c2.Type| Should -Be "Directive"
         $c2.Before| Should -Be "  "
-        $c2.After| Should -Be "$newLine$newLine"
+        $c2.After.StartsWith($newLine) | Should -Be $true
         $c2.Param| Should -Be "User"
         $c2.Separator| Should -Be " "
         $c2.Value| Should -Be "pegg"

@@ -77,14 +77,14 @@ function Connect-Ssh {
     if ($Name) {
         $match = Get-SshConfig $Name
 
-        if($match) {
+        if($match -and $match["HostName"]) {
             & $Command $match["HostName"]
-            return
         }
         else {
-            throw "Could not find a host named '$Name'"
-            return
+            # Couldn't find a match. Assume an address and pass through to ssh.
+            & $Command $Name
         }
+        return
     }
 
     # No name specified. Print out a list of connections to choose from.

@@ -6,7 +6,7 @@
 . $PSScriptRoot\src\Win32-OpenSSH.ps1
 . $PSScriptRoot\src\Globber.ps1
 . $PSScriptRoot\src\ConfigParser.ps1
-. $PSScriptRoot\src\Config.ps1
+. $PSScriptRoot\src\OpenSsh.ps1
 
 if (!(Get-NativeSshAgent)) {
     # Do not set these variables if we're using the Win10 native SSH agent as it breaks ssh-add.
@@ -24,5 +24,6 @@ Export-ModuleMember -Function @(
     'Get-SshConfig',
     'Connect-Ssh',
     'Add-SshConnection',
-    'Remove-SshConnection'
+    'Remove-SshConnection',
+    'Add-SshAlias'
 )

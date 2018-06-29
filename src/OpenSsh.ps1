@@ -80,7 +80,11 @@ function Connect-Ssh {
         $Name,
 
         [Parameter()]
-        $Command = (Get-Command ssh)
+        $Command = (Get-Command ssh),
+
+        [Parameter(ValueFromRemainingArguments)]
+        [psobject[]]
+        $Params
     )
 
     # If a name is specified, then find the matching config entry
@@ -88,11 +92,11 @@ function Connect-Ssh {
         $match = Get-SshConfig $Name
 
         if($match -and $match["HostName"]) {
-            & $Command $match["HostName"]
+            & $Command $match["HostName"] $Params
         }
         else {
             # Couldn't find a match. Assume an address and pass through to ssh.
-            & $Command $Name
+            & $Command $Name $Params
         }
         return
     }
@@ -133,7 +137,7 @@ function Connect-Ssh {
         if ($index) {
             $selected = $config[$index - 1]
             if ($selected) {
-                & $Command $selected["HostName"]
+                & $Command $selected["HostName"] $Params
             }
         }
     }
@@ -141,7 +145,7 @@ function Connect-Ssh {
         # User entered a string. Find hostname instead.
         $selected = $config | Where-Object { $_["Host"] -eq $userInput } | Select-Object -First 1
         if($selected) {
-            & $Command $selected["HostName"]
+            & $Command $selected["HostName"] $Params
         }
     }
 }
@@ -229,4 +233,23 @@ function Remove-SshConnection {
     $config = Get-SshConfig -Raw -Path $Path
     $config.RemoveHost($Name)
     $config.Stringify() | Out-File $Path
+}
+
+$script:originalSsh = $null
+function Add-SshAlias {
+    if (! $script:originalSsh) {
+        # Take a copy of where "ssh" currently points to and create a function to invoke it
+        $script:originalSsh = (Get-Command ssh)
+
+        # Overwrite the ssh command with a wrapper
+        function global:ssh {
+            param(
+                [Parameter(Position = 0)]
+                [string]
+                $Name
+            )
+
+            Connect-Ssh -Name $Name -Command $script:originalSsh $args
+        }
+    }
 }

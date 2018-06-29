@@ -29,6 +29,11 @@ function global:git {
     }
 }
 
+
+function global:ssh {
+    write-host "Pretending to run ssh"
+}
+
 function MakeNativePath([string]$Path) {
   $Path -replace '\\|/', [System.IO.Path]::DirectorySeparatorChar
 }

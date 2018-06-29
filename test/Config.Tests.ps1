@@ -1,9 +1,7 @@
-#Import-Module $PSScriptRoot\..\posh-sshell.psd1
-
 . $PSScriptRoot\Shared.ps1
 . $PSScriptRoot\..\src\Globber.ps1
 . $PSScriptRoot\..\src\ConfigParser.ps1
-. $PSScriptRoot\..\src\Config.ps1
+. $PSScriptRoot\..\src\OpenSsh.ps1
 
 Describe "Config" {
     Context "Get-SshConfig" {

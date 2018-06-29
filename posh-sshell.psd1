@@ -32,7 +32,8 @@
     'Get-SshConfig',
     'Connect-Ssh',
     'Add-SshConnection',
-    'Remove-SshConnection'
+    'Remove-SshConnection',
+    'Add-SshAlias'
   )
 
   # Cmdlets to export from this module

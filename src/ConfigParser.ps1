@@ -139,11 +139,17 @@ class SshConfig {
             }
         }
 
+        $foundHost = $false
+
         foreach($node in $this.Nodes) {
             if ($node.Type -ne "Directive") {
                 continue
             }
             elseif ($node.Param -eq "Host") {
+                if($node.Value -eq $sshHost) {
+                    $foundHost = $true
+                }
+
                 if(Test-Glob $node.Value $sshHost) {
                     & $setProperty $node.Param $node.Value
 
@@ -162,7 +168,12 @@ class SshConfig {
             }
         }
 
-        return $result
+        if($foundHost) {
+            return $result
+        }
+        else {
+            return $null
+        }
     }
 }
 <#

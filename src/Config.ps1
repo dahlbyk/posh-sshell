@@ -29,6 +29,12 @@ function Get-SshConfig {
     )
 
     if (! (Test-Path $Path)) {
+        # If we've requested the entire config as a raw object and it doesn't exist
+        # at that path, just return a new one.
+        if ($Raw -and !$SshHost) {
+            return [SshConfig]::new()
+        }
+
         throw "'$Path' could not be found."
     }
 
@@ -60,6 +66,10 @@ function Get-SshConfig {
 <#
 .SYNOPSIS
     Displays a list of available SSH connections and allows you to connect to one of them.
+.PARAMETER Name
+(Optional) the name of host to connect. If not specified, a list of connections is displayed.
+.PARAMETER Path
+(Optional) the path to the ssh config file. Defaults to ~/.ssh/config
 .EXAMPLE
     PS C:\> Connect-Ssh
 #>
@@ -175,7 +185,11 @@ function Add-SshConnection {
 
         [Parameter()]
         [hashtable]
-        $AdditionalOptions = @{}
+        $AdditionalOptions = @{},
+
+        [Parameter()]
+        [string]
+        $Path = (Get-SshPath 'config')
     )
 
     $parameters = @{}
@@ -186,11 +200,10 @@ function Add-SshConnection {
 
     $AdditionalOptions.Keys | ForEach-Object { $parameters[$_] = $AdditionalOptions[$_] }
 
-    $config = Get-SshConfig -Raw
+    $config = Get-SshConfig -Raw -Path $Path
     $config.Add($parameters)
 
-    $file = Get-SshPath 'config'
-    $config.Stringify() > $file
+    $config.Stringify() | Out-File $Path
 }
 
 <#
@@ -206,12 +219,14 @@ function Remove-SshConnection {
     param(
         [Parameter()]
         [string]
-        $Name
+        $Name,
+
+        [Parameter()]
+        [string]
+        $Path = (Get-SshPath 'config')
     )
 
-    $config = Get-SshConfig -Raw
+    $config = Get-SshConfig -Raw -Path $Path
     $config.RemoveHost($Name)
-
-    $file = Get-SshPath 'config'
-    $config.Stringify() > $file
+    $config.Stringify() | Out-File $Path
 }

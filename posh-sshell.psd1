@@ -33,7 +33,8 @@
     'Connect-Ssh',
     'Add-SshConnection',
     'Remove-SshConnection',
-    'Add-SshAlias'
+    'Add-SshAlias',
+    'TabExpansion'
   )
 
   # Cmdlets to export from this module

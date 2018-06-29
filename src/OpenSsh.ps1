@@ -294,3 +294,7 @@ function Add-SshAlias {
         }
     }
 }
+
+function isSshAliased {
+    return [bool]$script:originalSsh
+}

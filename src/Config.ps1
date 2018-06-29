@@ -37,7 +37,7 @@ function Get-SshConfig {
 
     if($SshHost -and $Raw) {
         # Find a speific host as the raw Node object.
-        return $cfg.FindNode($SshHost);
+        return $cfg.Find($SshHost);
     }
     elseif($SshHost) {
         # Specific host, parsed into a dictionary with computed properties.

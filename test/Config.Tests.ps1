@@ -13,5 +13,14 @@ Describe "Config" {
             $h = Get-SshConfig -Path "$PSScriptRoot\fixtures\config"
             $h.Count | Should -Be 2
         }
+        It "Gets host as raw node" {
+            $h = Get-SshConfig "tahoe1" -Raw -Path "$PSScriptRoot\fixtures\config"
+            $h.Param | Should -Be "Host"
+            $h.Value | Should -Be "tahoe1"
+        }
+        It "Gets all hosts as raw nodes" {
+            $h = Get-SshConfig -Raw -Path "$PSScriptRoot\fixtures\config"
+            $h.Nodes.Count | Should -Be 7
+        }
     }
 }

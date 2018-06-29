@@ -1,0 +1,5 @@
+Host example
+  HostName example.com
+
+Host foo
+    HostName example.com

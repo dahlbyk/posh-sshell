@@ -295,6 +295,19 @@ function Add-SshAlias {
     }
 }
 
-function isSshAliased {
+function Remove-SshAlias {
+    if(Test-SshAliased) {
+        # TODO. This doesn't seem to work. Horrible workaround is to redeclare the function again
+        # Remove-Item Function:\ssh
+
+        $ssh = $script:originalSsh
+        $script:originalSsh = $null
+        function global:ssh {
+            & $ssh $args
+        }
+    }
+}
+
+function Test-SshAliased {
     return [bool]$script:originalSsh
 }

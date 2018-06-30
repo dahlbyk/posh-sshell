@@ -1,4 +1,7 @@
-Import-Module $PSScriptRoot\..\posh-sshell.psd1
+. $PSScriptRoot\Shared.ps1
+. $PSScriptRoot\..\src\ConfigParser.ps1
+. $PSScriptRoot\..\src\Globber.ps1
+. $PSScriptRoot\..\src\OpenSsh.ps1
 
 $newLine = "`n" # [System.Environment]::NewLine
 

@@ -157,6 +157,12 @@ function Connect-Ssh {
     (Optional) The path to the IdentityFile to use for this connection
 .PARAMETER User
     (Optional) The username for this connection
+.PARAMETER LocalTunnelPort
+    (Optional) Local port for SSH tunnel.
+.PARAMETER RemoteTunnelPort
+    (Optional) Remote port for SSH tunnel.
+.PARAMETER TunnelHost
+    (Optional) Host name for tunnel (defaults to localhost if not specified)
 .PARAMETER AdditionalOptions
     (Optional) Hashtable of additional options for the connection
 #>
@@ -179,6 +185,18 @@ function Add-SshConnection {
         $User,
 
         [Parameter()]
+        [int]
+        $LocalTunnelPort,
+
+        [Parameter()]
+        [int]
+        $RemoteTunnelPort,
+
+        [Parameter()]
+        [string]
+        $TunnelHost,
+
+        [Parameter()]
         [hashtable]
         $AdditionalOptions = @{},
 
@@ -192,6 +210,15 @@ function Add-SshConnection {
     if ($Uri) { $parameters["HostName"] = $Uri }
     if ($User) { $parameters["User"] = $User }
     if ($IdentityFile) { $parameters["IdentityFile"] = $IdentityFile }
+
+    if ($LocalTunnelPort -or $RemoteTunnelPort) {
+        if (!$LocalTunnelPort) { $LocalTunnelPort = $RemoteTunnelPort }
+        elseif (!$RemoteTunnelPort) { $RemoteTunnelPort = $LocalTunnelPort }
+
+        if (!$TunnelHost) { $TunnelHost = "localhost" }
+
+        $parameters["LocalForward"] = "$LocalTunnelPort ${TunnelHost}:${RemoteTunnelPort}"
+    }
 
     $AdditionalOptions.Keys | ForEach-Object { $parameters[$_] = $AdditionalOptions[$_] }
 

@@ -47,6 +47,40 @@ Describe "Config" {
             $h["User"] | Should -Be "bar"
             $h["Cows"] | Should -Be "Moo"
         }
+        It "Adds connection with tunnel" {
+            Add-SshConnection -Name "foo" -Uri "example.com" `
+            -LocalTunnelPort 10001 -RemoteTunnelPort 10000 `
+            -TunnelHost "foo" `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            $output = Get-Content "$PSScriptRoot\fixtures\configwrite" -Raw
+            $config = Parse-SshConfig $output
+            $h = $config.Compute("foo")
+
+            $h["LocalForward"] | Should -Be "10001 foo:10000"
+        }
+        It "Adds connection with tunnel and infers remote port" {
+            Add-SshConnection -Name "foo" -Uri "example.com" `
+            -LocalTunnelPort 10000 `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            $output = Get-Content "$PSScriptRoot\fixtures\configwrite" -Raw
+            $config = Parse-SshConfig $output
+            $h = $config.Compute("foo")
+
+            $h["LocalForward"] | Should -Be "10000 localhost:10000"
+        }
+        It "Adds connection with tunnel and infers local port" {
+            Add-SshConnection -Name "foo" -Uri "example.com" `
+            -RemoteTunnelPort 10000 `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            $output = Get-Content "$PSScriptRoot\fixtures\configwrite" -Raw
+            $config = Parse-SshConfig $output
+            $h = $config.Compute("foo")
+
+            $h["LocalForward"] | Should -Be "10000 localhost:10000"
+        }
         It "Removes a connection" {
             Add-SshConnection -Name "foo" -Uri "example.com" `
                 -Path "$PSScriptRoot\fixtures\configwrite"

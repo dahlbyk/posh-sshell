@@ -225,7 +225,7 @@ function Add-SshConnection {
     $config = Get-SshConfig -Raw -Path $Path
     $config.Add($parameters)
 
-    $config.Stringify() | Out-File $Path
+    $config.Stringify() | Out-File $Path -Encoding utf8
 }
 
 <#
@@ -250,7 +250,7 @@ function Remove-SshConnection {
 
     $config = Get-SshConfig -Raw -Path $Path
     $config.RemoveHost($Name)
-    $config.Stringify() | Out-File $Path
+    $config.Stringify() | Out-File $Path -Encoding utf8
 }
 
 $script:originalSsh = $null

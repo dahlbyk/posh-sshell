@@ -89,15 +89,7 @@ function Connect-Ssh {
 
     # If a name is specified, then find the matching config entry
     if ($Name) {
-        $match = Get-SshConfig $Name
-
-        if($match -and $match["HostName"]) {
-            & $Command $match["HostName"] $Params
-        }
-        else {
-            # Couldn't find a match. Assume an address and pass through to ssh.
-            & $Command $Name $Params
-        }
+        & $Command $Name $Params
         return
     }
 
@@ -137,15 +129,14 @@ function Connect-Ssh {
         if ($index) {
             $selected = $config[$index - 1]
             if ($selected) {
-                & $Command $selected["HostName"] $Params
+                & $Command $selected["Host"] $Params
             }
         }
     }
     elseif($userInput) {
         # User entered a string. Find hostname instead.
-        $selected = $config | Where-Object { $_["Host"] -eq $userInput } | Select-Object -First 1
         if($selected) {
-            & $Command $selected["HostName"] $Params
+            & $Command $userInput $Params
         }
     }
 }

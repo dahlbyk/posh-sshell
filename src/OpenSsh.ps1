@@ -112,8 +112,9 @@ function Connect-Ssh {
         # Add a row to the output with a numeric index, name and URI.
         $properties = [PSCustomObject][ordered]@{
             "#" = ($config.IndexOf($entry) + 1)
-            Name = $entry["Host"];
+            Name = $entry["Host"]
             Uri = $entry["HostName"]
+            User = $entry["User"]
         }
 
         $display += $properties

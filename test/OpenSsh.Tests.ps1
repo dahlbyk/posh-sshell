@@ -47,6 +47,17 @@ Describe "Config" {
             $h["User"] | Should -Be "bar"
             $h["Cows"] | Should -Be "Moo"
         }
+        It "Adds connection and splits out username" {
+            Add-SshConnection -Name "foo" -Uri "bar@example.com" -Path "$PSScriptRoot\fixtures\configwrite"
+
+            $output = Get-Content "$PSScriptRoot\fixtures\configwrite" -Raw
+            $config = Parse-SshConfig $output
+            $h = $config.Compute("foo")
+
+            $h["Host"] | Should -Be "foo"
+            $h["HostName"] | Should -Be "example.com"
+            $h["User"] | Should -Be "bar"
+        }
         It "Adds connection with tunnel" {
             Add-SshConnection -Name "foo" -Uri "example.com" `
             -LocalTunnelPort 10001 -RemoteTunnelPort 10000 `

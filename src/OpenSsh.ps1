@@ -207,10 +207,32 @@ function Add-SshConnection {
     )
 
     $parameters = @{}
-    if ($Name) { $parameters["Host"] = $Name }
-    if ($Uri) { $parameters["HostName"] = $Uri }
-    if ($User) { $parameters["User"] = $User }
-    if ($IdentityFile) { $parameters["IdentityFile"] = $IdentityFile }
+
+    if ($Name) {
+        $parameters["Host"] = $Name
+    }
+
+    if ($Uri) {
+        # If the URI has a user@ prefix, then separate them out.
+        # But allow an explicit username parameter to override.
+        if ($Uri.Contains("@")) {
+            $bits = $Uri.Split("@")
+            if (! $User) {
+                $User = $bits[0]
+            }
+            $Uri = $bits[1]
+        }
+
+        $parameters["HostName"] = $Uri
+    }
+
+    if ($User) {
+        $parameters["User"] = $User
+    }
+
+    if ($IdentityFile) {
+        $parameters["IdentityFile"] = $IdentityFile
+    }
 
     if ($LocalTunnelPort -or $RemoteTunnelPort) {
         if (!$LocalTunnelPort) { $LocalTunnelPort = $RemoteTunnelPort }

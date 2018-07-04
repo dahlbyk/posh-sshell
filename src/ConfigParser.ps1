@@ -63,13 +63,19 @@ class SshConfig {
 
             if ($script:RE_SECTION_DIRECTIVE.IsMatch($key)) {
                 $config = $configWas;
-                # Make sure new hosts are added to the beginning,
-                # so they don't get swallowed by wildcard.
-                if ($key -eq "Host") {
-                    $config.Nodes.Insert(0, $line);
+
+                # Make sure we insert before any wildcard lines
+                $index = $config.Nodes.Count -1;
+
+                while($config.Nodes[$index].Value -and ($config.Nodes[$index].Value.Contains("*") -or  $config.Nodes[$index].Value.Contains("?"))) {
+                    $index--
+                }
+
+                if ($index -eq $config.Nodes.Count -1) {
+                    $config.Nodes.Add($line)
                 }
                 else {
-                    $config.Nodes.Add($line);
+                    $config.Nodes.Insert($index, $line)
                 }
 
                 $config = $line.Config = [SshConfig]::new()

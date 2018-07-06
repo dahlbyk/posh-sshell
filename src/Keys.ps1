@@ -23,7 +23,7 @@ function Get-SshPath($File = 'id_rsa') {
   None.
   You cannot pipe input to this cmdlet.
 #>
-function Add-SshKey([switch]$Quiet) {
+function Add-SshKey([switch]$Quiet, [switch]$All) {
   if ($env:GIT_SSH -imatch 'plink') {
       $pageant = Get-Command pageant -Erroraction SilentlyContinue | Select-Object -First 1 -ExpandProperty Name
       $pageant = if ($pageant) { $pageant } else { Find-Pageant }
@@ -67,11 +67,23 @@ function Add-SshKey([switch]$Quiet) {
                 if (!$Quiet) {
                     Write-Host Keys have already been added to the ssh agent.
                 }
-                return;
+               return;
             }
         }
 
-        & $sshAdd
+        if ($All) {
+            # If All is specified, then parse the config file for keys to add.
+            $config = Get-SshConfig
+            foreach($entry in $config) {
+                if ($entry['IdentityFile']) {
+                    & $sshAdd $config['IdentityFile']
+                }
+            }
+        }
+        else {
+            # Otherwise just run without args, so it'll add the default key.
+            & $sshAdd
+        }
     }
     else {
         foreach ($value in $args) {

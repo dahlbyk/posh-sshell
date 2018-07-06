@@ -60,6 +60,56 @@ Import-Module posh-sshell
 ```
 Save the profile script, then close PowerShell and open a new PowerShell session.
 
+## Features
+
+Posh-Sshell has several features:
+
+### SSH Connection Manager
+
+The SSH connection manager allows you to work with hosts defined in your `~/.ssh/config` file. Typing `Connect-Ssh` will display all the hosts in the file, and allow you to connect to one of them. For example, if you have the following in your config file:
+
+```
+Host Server1
+  HostName server1.jeremyskinner.co.uk
+  User jeremy
+
+Host Server2
+  HostName server1.jeremyskinner.co.uk
+  User jeremy
+```
+
+...then typing `Connect-Ssh` will present you with the following interface where you can select a connection:
+
+![image](https://user-images.githubusercontent.com/90130/42387651-e0d90f7c-813a-11e8-90cf-cfdac885ce37.png)
+
+You can also connect directly to a particular session, by using `Connect-Ssh <server name>`, eg `Connect-Ssh Server1`.
+
+### Adding and removing connections
+
+As well as displaying connections, you can add new connections directly to your ssh config file using, `Add-SshConnection`, eg:
+
+```powershell
+Add-SshConnection -Name Server1 -Uri server1.jeremyskinner.co.uk -User jeremy
+```
+
+You can also use a short-hand syntax:
+
+```powershell
+Add-SshConnection Server1 jeremy@server1.jeremyskinner.co.uk
+```
+
+Similarily, you can remove connections with `Remove-SshConnection`
+
+### Automatically start the SSH Agent
+
+Posh-Sshell can automatically start your SSH agent by adding a call to `Start-SshAgent -Quiet` in your profile. 
+
+If you are using the Windows-native version of OpenSSH that ships with Windows 10 1803 or newer, then this will simply start the agent service if it's not already running and add your keys. You will be prompted once to enter your key passphrase. Once the service is running, you will not be prompted again.
+
+If you are using the version of OpenSSH that comes with Git for Windows, then you will be prompted to enter your key the first time you open a Powershell session following a restart.
+
+Ifyou are using Pageant as your SSH agent, then Pagent will automatically started and your keys will be added.
+
 ## Based on work by:
 
  - Keith Dahlby, http://solutionizing.net/

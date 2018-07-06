@@ -23,6 +23,8 @@ $ModuleBasePath = Convert-Path $PSScriptRoot\..
     posh-sshell. Just add Import-Module posh-sshell command.
 .PARAMETER StartSshAgent
     Also add `Start-SshAgent -Quiet` to the specified profile script.
+.PARAMETER AddSshAlias
+    Re-maps the "ssh" command to go via Connect-Ssh instead of invoking ssh directly
 .EXAMPLE
     PS C:\> Add-PoshSshellToProfile
     Updates your profile script for the current PowerShell host to import the
@@ -54,6 +56,10 @@ function Add-PoshSshellToProfile {
       [Parameter()]
       [switch]
       $StartSshAgent,
+
+      [Parameter()]
+      [switch]
+      $AddSshAlias,
 
       [Parameter(ValueFromRemainingArguments)]
       [psobject[]]
@@ -160,5 +166,9 @@ function Add-PoshSshellToProfile {
 
   if ($StartSshAgent -and $PSCmdlet.ShouldProcess($profilePath, "Add 'Start-SshAgent -Quiet' to profile")) {
     Add-Content -LiteralPath $profilePath -Value 'Start-SshAgent -Quiet' -Encoding UTF8
+  }
+
+  if($AddSshAlias -And $PSCmdlet.ShouldProcess($profilePath, "Add 'Add-SshAlias' to profile")) {
+    Add-Content -LiteralPath $profilePath -Value "Add-SshAlias" -Encoding UTF8
   }
 }

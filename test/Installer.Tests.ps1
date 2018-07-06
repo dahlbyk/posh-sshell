@@ -135,6 +135,24 @@ New-Alias pscore C:\Users\Keith\GitHub\rkeithhill\PowerShell\src\powershell-win-
             $content = Get-Content $profilePath
             $content | Should -BeExactly $profileContent
         }
+
+        It 'Adds Add-SshAlias if posh-sshell is not installed' {
+            Add-PoshSshellToProfile $profilePath -AddSshAlias
+
+            Test-Path -LiteralPath $profilePath | Should -Be $true
+            $last = Get-Content $profilePath | Select-Object -Last 1
+            $last | Should -BeExactly "Add-SshAlias"
+        }
+        It 'Does not add Start-SshAlias if posh-sshell is installed' {
+            $profileContent = 'Import-Module posh-sshell'
+            Set-Content $profilePath -Value $profileContent
+
+            Add-PoshSshellToProfile $profilePath -AddSshAlias
+
+            Test-Path -LiteralPath $profilePath | Should -Be $true
+            $content = Get-Content $profilePath
+            $content | Should -BeExactly $profileContent
+        }
     }
 
     Context 'Test-PoshSshImportedInScript Tests' {

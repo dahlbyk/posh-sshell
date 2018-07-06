@@ -1,0 +1,19 @@
+ControlMaster auto
+ControlPath ~/.ssh/master-%r@%h:%p
+ServerAliveInterval 80
+
+Host tahoe1
+  HostName tahoe1.com
+  Compression yes
+
+Host tahoe2
+  HostName tahoe2.com
+  ServerAliveInterval 60
+
+Host *
+  IdentityFile ~/.ssh/id_rsa
+
+Host tahoe?
+  User nil
+  ForwardAgent true
+  ProxyCommand ssh -q gateway -W %h:%p

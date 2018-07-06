@@ -28,7 +28,12 @@
     'Stop-SshAgent',
     'Add-SshKey',
     'Get-SshPath',
-    'Add-PoshSshellToProfile'
+    'Add-PoshSshellToProfile',
+    'Get-SshConfig',
+    'Connect-Ssh',
+    'Add-SshConnection',
+    'Remove-SshConnection',
+    'Add-SshAlias'
   )
 
   # Cmdlets to export from this module

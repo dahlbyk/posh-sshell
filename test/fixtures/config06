@@ -1,0 +1,4 @@
+# Fallback Identify Files
+IdentityFile ~/.ssh/ids/%h/%r/id_rsa
+IdentityFile ~/.ssh/ids/%h/id_rsa
+IdentityFile ~/.ssh/id_rsa

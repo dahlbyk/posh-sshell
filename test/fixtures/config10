@@ -1,0 +1,4 @@
+Host example
+  HostName example.com
+  User dan
+  IdentityFile "/path to my/.ssh/id_rsa"

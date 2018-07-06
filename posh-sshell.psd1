@@ -1,4 +1,4 @@
-@{
+﻿@{
 
   # Script module or binary module file associated with this manifest.
   RootModule = 'posh-sshell.psm1'
@@ -52,17 +52,18 @@
           # Tags applied to this module. These help with module discovery in online galleries.
           Tags = @('ssh', 'openssh', 'open-ssh', 'putty', 'pageant', 'PSEdition_Core')
           # A URL to the license for this module.
-          LicenseUri = 'https://github.com/dahlbyk/posh-sshell/blob/master/LICENSE.txt'
+          LicenseUri = 'https://github.com/dahlbyk/posh-sshell/blob/v0.2.0/LICENSE.txt'
 
           # A URL to the main website for this project.
           ProjectUri = 'https://github.com/dahlbyk/posh-sshell'
 
           # ReleaseNotes of this module
-          ReleaseNotes = 'https://github.com/dahlbyk/posh-sshell/blob/master/CHANGELOG.md'
+          ReleaseNotes = 'https://github.com/dahlbyk/posh-sshell/blob/v0.2.0/CHANGELOG.md'
 
           # OVERRIDE THIS FIELD FOR PUBLISHED RELEASES - LEAVE AT 'alpha' FOR CLONED/LOCAL REPO USAGE
-          Prerelease = 'pre0'
+          
       }
   }
 }
+
 

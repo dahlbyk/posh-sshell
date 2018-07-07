@@ -12,6 +12,25 @@
     The host name to look up. If not specified, will return all hosts.
 .PARAMETER Path
     The path of the OpenSSH config file. If not specified, defaults to ~/.ssh/config
+.PARAMETER Raw
+    Indicates whether the function should return the configuration entries
+    in their 'raw' form or their 'computed' form.
+
+    In their 'raw' form a hierarchy of ConfigNode
+    objects is returned that represent the lines in the config file. Each node has a name, a value,
+    a separator and optionally a collection of child nodes (which in turn have the same properties).
+
+    In their 'computed' form, the hierarchy is searched and wildcards are expanded.
+    These are returned as a list of Hashtables, where the keys in the hashtable are the host's properties.
+    Given the following config, only a single hashtable will be returned as the wildcard entry will be expanded
+    and its properties appended to the first host.
+
+    Host foo
+      HostName example.com
+      User jeremy
+
+    Host *
+      IdentityFile ~/.ssh/foo_id_rsa
 #>
 function Get-SshConfig {
     param(

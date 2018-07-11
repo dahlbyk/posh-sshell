@@ -63,7 +63,11 @@ Describe 'SSH Function Tests' {
             $result | Should Not Be $null
             $result.Name | Should -Be "ssh-agent"
         }
-
+        It "Finds the service when Get-SshAgent is called" {
+            $result = Get-SshAgent
+            $result | Should Not Be $null
+            $result.Name | Should -Be "ssh-agent"
+        }
         It "Starts the service when stopped and user is admin" {
             Mock Test-Administrator { return $true }
             $result = Start-NativeSshAgent -Quiet

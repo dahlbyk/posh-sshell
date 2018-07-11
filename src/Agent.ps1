@@ -5,6 +5,9 @@ function Get-SshAgent() {
         $pageantPid = Get-Process | Where-Object { $_.Name -eq 'pageant' } | Select-Object -ExpandProperty Id -First 1
         if ($null -ne $pageantPid) { return $pageantPid }
     }
+    elseif ($native = Get-NativeSshAgent) {
+        return $native
+    }
     else {
         $agentPid = $Env:SSH_AGENT_PID
         if ($agentPid) {

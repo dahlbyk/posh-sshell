@@ -64,14 +64,19 @@ class SshConfig {
             if ($script:RE_SECTION_DIRECTIVE.IsMatch($key)) {
                 $config = $configWas;
 
-                # Make sure we insert before any wildcard lines
-                $index = $config.Nodes.Count -1;
+                # Make sure we insert before any wildcard lines.
+                # find the index of the first wildcard
+                $index = 0
 
-                while($config.Nodes[$index].Value -and ($config.Nodes[$index].Value.Contains("*") -or  $config.Nodes[$index].Value.Contains("?"))) {
-                    $index--
+                foreach($node in $config.Nodes) {
+                    if ($node.Value.Contains("*") -or $node.Value.Contains("?")) {
+                        # Found a wildcard. Make sure we insert before this.
+                        break;
+                    }
+                    $index++;
                 }
 
-                if ($index -eq $config.Nodes.Count -1) {
+                if ($config.Nodes.Count -eq 0) {
                     $config.Nodes.Add($line)
                 }
                 else {

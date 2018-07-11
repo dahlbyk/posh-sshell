@@ -47,6 +47,66 @@ Describe "Config" {
             $h["User"] | Should -Be "bar"
             $h["Cows"] | Should -Be "Moo"
         }
+        It "Adds connection to the end of the file" {
+            Add-Content "$PSScriptRoot\fixtures\configwrite" "Host bar`n  HostName example.com"
+
+            Add-SshConnection -Name "foo1" -Uri "example.com" `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            Add-SshConnection -Name "foo2" -Uri "example.com" `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            Add-SshConnection -Name "foo3" -Uri "example.com" `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            $output = Get-Content "$PSScriptRoot\fixtures\configwrite" -Raw
+            $config = Parse-SshConfig $output
+
+            $config.Nodes[0].Value | Should -Be "bar"
+            $config.Nodes[1].Value | Should -Be "foo1"
+            $config.Nodes[2].Value | Should -Be "foo2"
+            $config.Nodes[3].Value | Should -Be "foo3"
+        }
+        It "Adds connection to the end of the file but before the wildcard" {
+            Add-Content "$PSScriptRoot\fixtures\configwrite" "Host *`n  ForwardAgent yes"
+
+            Add-SshConnection -Name "foo1" -Uri "example.com" `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            Add-SshConnection -Name "foo2" -Uri "example.com" `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            Add-SshConnection -Name "foo3" -Uri "example.com" `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            $output = Get-Content "$PSScriptRoot\fixtures\configwrite" -Raw
+            $config = Parse-SshConfig $output
+
+            $config.Nodes[0].Value | Should -Be "foo1"
+            $config.Nodes[1].Value | Should -Be "foo2"
+            $config.Nodes[2].Value | Should -Be "foo3"
+        }
+        It "Adds connection to the end of the file after existing entries but before the wildcard" {
+            Add-Content "$PSScriptRoot\fixtures\configwrite" "Host bar`n  HostName example.com`n`nHost *`n  ForwardAgent yes"
+
+            Add-SshConnection -Name "foo1" -Uri "example.com" `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            Add-SshConnection -Name "foo2" -Uri "example.com" `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            Add-SshConnection -Name "foo3" -Uri "example.com" `
+            -Path "$PSScriptRoot\fixtures\configwrite"
+
+            $output = Get-Content "$PSScriptRoot\fixtures\configwrite" -Raw
+            $config = Parse-SshConfig $output
+
+            $config.Nodes[0].Value | Should -Be "bar"
+            $config.Nodes[1].Value | Should -Be "foo1"
+            $config.Nodes[2].Value | Should -Be "foo2"
+            $config.Nodes[3].Value | Should -Be "foo3"
+            $config.Nodes[4].Value | Should -Be "*"
+        }
         It "Adds connection and splits out username" {
             Add-SshConnection -Name "foo" -Uri "bar@example.com" -Path "$PSScriptRoot\fixtures\configwrite"
 

@@ -27,35 +27,35 @@ function Get-SshAgent() {
 
 # Attempt to guess $program's location. For ssh-agent/ssh-add.
 function Find-Ssh($program = 'ssh-agent') {
-  Write-Verbose "$program not in path. Trying to guess location."
-  $gitItem = Get-Command git -CommandType Application -Erroraction SilentlyContinue | Get-Item
-  if ($null -eq $gitItem) {
-      Write-Warning 'git not in path'
-      return
-  }
+    Write-Verbose "$program not in path. Trying to guess location."
+    $gitItem = Get-Command git -CommandType Application -Erroraction SilentlyContinue | Get-Item
+    if ($null -eq $gitItem) {
+        Write-Warning 'git not in path'
+        return
+    }
 
-  $sshLocation = join-path $gitItem.directory.parent.fullname bin/$program
-  if (get-command $sshLocation -Erroraction SilentlyContinue) {
-      return $sshLocation
-  }
+    $sshLocation = join-path $gitItem.directory.parent.fullname bin/$program
+    if (get-command $sshLocation -Erroraction SilentlyContinue) {
+        return $sshLocation
+    }
 
-  $sshLocation = join-path $gitItem.directory.parent.fullname usr/bin/$program
-  if (get-command $sshLocation -Erroraction SilentlyContinue) {
-      return $sshLocation
-  }
+    $sshLocation = join-path $gitItem.directory.parent.fullname usr/bin/$program
+    if (get-command $sshLocation -Erroraction SilentlyContinue) {
+        return $sshLocation
+    }
 }
 
 # Loosely based on bash script from http://help.github.com/ssh-key-passphrases/
 function Start-SshAgent {
     param(
-       [Parameter(Position = 0)]
-       [ValidateSet("Automatic", "Boot", "Disabled", "Manual", "System")]
-       [string]
-       $StartupType = "Manual",
+        [Parameter(Position = 0)]
+        [ValidateSet("Automatic", "Boot", "Disabled", "Manual", "System")]
+        [string]
+        $StartupType = "Manual",
 
-       [Parameter()]
-       [switch]
-       $Quiet
+        [Parameter()]
+        [switch]
+        $Quiet
     )
 
     # If we're using the win10 native ssh client,
@@ -111,15 +111,15 @@ function Start-SshAgent {
 
 # Stop a running SSH agent
 function Stop-SshAgent() {
-  [int]$agentPid = Get-SshAgent
-  if ($agentPid -gt 0) {
-      # Stop agent process
-      $proc = Get-Process -Id $agentPid -ErrorAction SilentlyContinue
-      if ($null -ne $proc) {
-          Stop-Process $agentPid
-      }
+    [int]$agentPid = Get-SshAgent
+    if ($agentPid -gt 0) {
+        # Stop agent process
+        $proc = Get-Process -Id $agentPid -ErrorAction SilentlyContinue
+        if ($null -ne $proc) {
+            Stop-Process $agentPid
+        }
 
-      setenv 'SSH_AGENT_PID' $null
-      setenv 'SSH_AUTH_SOCK' $null
-  }
+        setenv 'SSH_AGENT_PID' $null
+        setenv 'SSH_AUTH_SOCK' $null
+    }
 }

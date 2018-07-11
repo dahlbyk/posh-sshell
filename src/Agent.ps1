@@ -55,7 +55,12 @@ function Start-SshAgent {
 
         [Parameter()]
         [switch]
-        $Quiet
+        $Quiet,
+
+        [Parameter()]
+        [ValidateSet("Machine", "Process", "User")]
+        [string]
+        $Scope = "Process"
     )
 
     # If we're using the win10 native ssh client,

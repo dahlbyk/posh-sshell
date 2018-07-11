@@ -111,6 +111,11 @@ function Start-SshAgent {
 
 # Stop a running SSH agent
 function Stop-SshAgent() {
+    if ($nativeAgent = Get-NativeSshAgent) {
+        Stop-Service $nativeAgent.Name
+        return
+    }
+
     [int]$agentPid = Get-SshAgent
     if ($agentPid -gt 0) {
         # Stop agent process

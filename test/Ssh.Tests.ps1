@@ -161,6 +161,12 @@ Describe 'SSH Function Tests' {
                 "$args" -eq 'config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"'
             } -Scope It
         }
+        It "Stops the service" {
+            $service.Status = "Running"
+            Mock Stop-Service { $service.Status = "Stopped" } -ParameterFilter { $Name -eq "ssh-agent" }
+            Stop-SshAgent
+            $service.Status | Should -Be "Stopped"
+        }
     }
 
 }

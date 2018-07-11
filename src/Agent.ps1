@@ -1,25 +1,25 @@
 # Retrieve the current SSH agent PID (or zero). Can be used to determine if there
 # is a running agent.
 function Get-SshAgent() {
-  if ($env:GIT_SSH -imatch 'plink') {
-      $pageantPid = Get-Process | Where-Object { $_.Name -eq 'pageant' } | Select-Object -ExpandProperty Id -First 1
-      if ($null -ne $pageantPid) { return $pageantPid }
-  }
-  else {
-      $agentPid = $Env:SSH_AGENT_PID
-      if ($agentPid) {
-          $sshAgentProcess = Get-Process | Where-Object { ($_.Id -eq $agentPid) -and ($_.Name -eq 'ssh-agent') }
-          if ($null -ne $sshAgentProcess) {
-              return $agentPid
-          }
-          else {
-              setenv 'SSH_AGENT_PID' $null
-              setenv 'SSH_AUTH_SOCK' $null
-          }
-      }
-  }
+    if ($env:GIT_SSH -imatch 'plink') {
+        $pageantPid = Get-Process | Where-Object { $_.Name -eq 'pageant' } | Select-Object -ExpandProperty Id -First 1
+        if ($null -ne $pageantPid) { return $pageantPid }
+    }
+    else {
+        $agentPid = $Env:SSH_AGENT_PID
+        if ($agentPid) {
+            $sshAgentProcess = Get-Process | Where-Object { ($_.Id -eq $agentPid) -and ($_.Name -eq 'ssh-agent') }
+            if ($null -ne $sshAgentProcess) {
+                return $agentPid
+            }
+            else {
+                setenv 'SSH_AGENT_PID' $null
+                setenv 'SSH_AUTH_SOCK' $null
+            }
+        }
+    }
 
-  return 0
+    return 0
 }
 
 # Attempt to guess $program's location. For ssh-agent/ssh-add.

@@ -105,7 +105,7 @@ function Start-SshAgent {
 
         & $sshAgent | ForEach-Object {
             if ($_ -match '(?<key>[^=]+)=(?<value>[^;]+);') {
-                setenv $Matches['key'] $Matches['value']
+                setenv $Matches['key'] $Matches['value'] $Scope
             }
         }
     }

@@ -58,7 +58,7 @@ function Start-SshAgent {
         $Quiet,
 
         [Parameter()]
-        [ValidateSet("Machine", "Process", "User")]
+        [ValidateSet("Process", "User")]
         [string]
         $Scope = "Process"
     )

@@ -15,14 +15,7 @@ function setenv {
         [string]
         $Scope = "Process"
     )
-
-    $type = [System.EnvironmentVariableTarget]::Process
-
-    if ($Scope -eq "User") {
-        $type = [System.EnvironmentVariableTarget]::User
-    }
-
-    [void][Environment]::SetEnvironmentVariable($key, $value, $type)
+    [void][Environment]::SetEnvironmentVariable($key, $value, $Scope)
     Set-TempEnv $key $value
 }
 

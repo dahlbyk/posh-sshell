@@ -1,7 +1,21 @@
 $ModuleBasePath = "$PSScriptRoot\.."
 
-function setenv($key, $value) {
-    [void][Environment]::SetEnvironmentVariable($key, $value)
+function setenv {
+    param(
+        [Parameter()]
+        [string]
+        $key,
+
+        [Parameter()]
+        [string]
+        $value,
+
+        [Parameter()]
+        [ValidateSet("Process", "User")]
+        [string]
+        $Scope = "Process"
+    )
+    [void][Environment]::SetEnvironmentVariable($key, $value, $Scope)
     Set-TempEnv $key $value
 }
 

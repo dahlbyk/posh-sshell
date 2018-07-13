@@ -63,7 +63,11 @@ Describe 'SSH Function Tests' {
             $result | Should Not Be $null
             $result.Name | Should -Be "ssh-agent"
         }
-
+        It "Finds the service when Get-SshAgent is called" {
+            $result = Get-SshAgent
+            $result | Should Not Be $null
+            $result.Name | Should -Be "ssh-agent"
+        }
         It "Starts the service when stopped and user is admin" {
             Mock Test-Administrator { return $true }
             $result = Start-NativeSshAgent -Quiet
@@ -156,6 +160,12 @@ Describe 'SSH Function Tests' {
             Assert-MockCalled git -Times 0 -Exactly -ParameterFilter {
                 "$args" -eq 'config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"'
             } -Scope It
+        }
+        It "Stops the service" {
+            $service.Status = "Running"
+            Mock Stop-Service { $service.Status = "Stopped" } -ParameterFilter { $Name -eq "ssh-agent" }
+            Stop-SshAgent
+            $service.Status | Should -Be "Stopped"
         }
     }
 

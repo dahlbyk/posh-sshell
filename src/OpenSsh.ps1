@@ -267,10 +267,8 @@ function Add-SshConnection {
     $config = Get-SshConfig -Raw -Path $Path
     $config.Add($parameters)
 
-    # Don't use | Out-File -Encoding Utf8 as it writes the file with the BOM.
-    # The version of openssh that comes with git for windows does not like this (even though Win32-Openssh is ok with it)
-    $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
-    [System.IO.File]::WriteAllText($Path, $config.Stringify(), $Utf8NoBomEncoding)
+    # Don't use UTF8 as it always writes the BOM which breaks openssh.
+    $config.Stringify() | Out-File $Path -Encoding ascii
 }
 
 <#
@@ -296,10 +294,8 @@ function Remove-SshConnection {
     $config = Get-SshConfig -Raw -Path $Path
     $config.RemoveHost($Name)
 
-    # Don't use | Out-File -Encoding Utf8 as it writes the file with the BOM.
-    # The version of openssh that comes with git for windows does not like this (even though Win32-Openssh is ok with it)
-    $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
-    [System.IO.File]::WriteAlLText($Path, $config.Stringify(), $Utf8NoBomEncoding)
+    # Don't use UTF8 as it always writes the BOM which breaks openssh.
+    $config.Stringify() | Out-File $Path -Encoding ascii
 }
 
 $script:originalSsh = $null

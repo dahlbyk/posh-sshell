@@ -108,7 +108,7 @@ If you are using the Windows-native version of OpenSSH that ships with Windows 1
 
 If you are using the version of OpenSSH that comes with Git for Windows, then you will be prompted to enter your key the first time you open a Powershell session following a restart.
 
-Ifyou are using Pageant as your SSH agent, then Pagent will automatically started and your keys will be added.
+If you are using Pageant as your SSH agent, then Pagent will automatically started and your keys will be added.
 
 ## Based on work by:
 

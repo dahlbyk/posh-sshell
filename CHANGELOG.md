@@ -1,5 +1,9 @@
 # posh-sshell Release History
 
+## 0.2.1 - 30 July 2018
+- Fixed encoding issues with writing to the .ssh/config file
+- Added username prompt to the connection manager
+
 ## 0.2 - 6 July 2018
 - Added SSH connection manager
 

@@ -152,7 +152,7 @@ function Connect-Ssh {
                 $hostname = $selected["Host"]
 
                 # Only prompt for username if there's no user name explicitly defined.
-                if (!$config['User']) {
+                if (!$selected['User']) {
                     do {
                         $username = Read-Host "Enter username"
                     } while (!$username)

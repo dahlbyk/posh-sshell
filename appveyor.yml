@@ -1,5 +1,6 @@
-os:
-  - "WMF 5"
+image:
+  - "Visual Studio 2017"
+  - "Ubuntu"
 
 environment:
   CA_KEY:
@@ -13,18 +14,17 @@ init:
 
 install:
   - ps: |
-      Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null
-      Install-Module Pester -MinimumVersion 4.0.8 -MaximumVersion 4.99.99 -Scope CurrentUser -Force | Out-Null
-      "Git version: $(git.exe --version)"
+      Install-Module Pester -MinimumVersion 4.0.8 -MaximumVersion 4.99.99 -Scope CurrentUser -Force -SkipPublisherCheck | Out-Null
+      
+      if (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows) {
+        Install-Module Coveralls -MinimumVersion 1.0.5 -Scope CurrentUser -Force
+      }
+
+      "Git version: $(git --version)"
       "PSVersion:   $($PSVersionTable.PSVersion), build: $($PSVersionTable.BuildVersion), clr version: $($PSVersionTable.ClrVersion)"
       "Host name:   $($Host.Name)"
 
 build: false
-
-before_test:
-  - ps: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-  - ps: Install-Module Coveralls -MinimumVersion 1.0.5 -Scope CurrentUser
-  - ps: Import-Module Coveralls
 
 test_script:
   - ps: |
@@ -37,6 +37,12 @@ test_script:
           Verbose      = $VerbosePreference
       }
       Import-Module Pester
+
+      # Only use Coveralls for windows build
+      if (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows) {
+          Import-Module Coveralls
+      }
+
       $res = Invoke-Pester @pesterParams
       if (Test-Path $testResultsFile) {
           (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", $testResultsFile)
@@ -51,5 +57,9 @@ test_script:
           Write-Host 'CA_KEY not set! (Expected on PR builds.)'
           return;
       }
-      $coverageResult = Format-Coverage -Include (@(gci *.psm1) + @(gci src/*.ps1)) -CoverallsApiToken $ENV:CA_KEY -RootFolder ../ -BranchName $ENV:APPVEYOR_REPO_BRANCH
-      Publish-Coverage -Coverage $coverageResult
+
+      # Only upload coverage for windows build
+      if (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows) {
+          $coverageResult = Format-Coverage -Include (@(gci *.psm1) + @(gci src/*.ps1)) -CoverallsApiToken $ENV:CA_KEY -RootFolder ../ -BranchName $ENV:APPVEYOR_REPO_BRANCH
+          Publish-Coverage -Coverage $coverageResult
+      }

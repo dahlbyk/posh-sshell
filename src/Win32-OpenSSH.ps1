@@ -39,7 +39,12 @@ function Start-NativeSshAgent([switch]$Quiet, [string]$StartupType = 'Manual') {
         Start-Service "ssh-agent"
     }
 
-    if (!$env:GIT_SSH) {
+    if ($env:GIT_SSH) {
+        if (!$Quiet) {
+            Write-Host "GIT_SSH is set, not setting core.sshCommand in .gitconfig"
+        }
+    }
+    else {
         # Make sure git is configured to use OpenSSH-Win32
         $sshCommand = (Get-Command ssh.exe -ErrorAction Ignore | Select-Object -ExpandProperty Path).Replace("\", "/")
         $configuredSshCommand = git config --global core.sshCommand

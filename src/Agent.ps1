@@ -94,7 +94,7 @@ function Start-SshAgent {
         Start-Process -NoNewWindow $pageant
     }
     else {
-        $sshAgent = Get-Command ssh-agent -TotalCount 1 -ErrorAction SilentlyContinue
+        $sshAgent = Get-Command ssh-agent -CommandType Application -TotalCount 1 -ErrorAction SilentlyContinue
         $sshAgent = if ($sshAgent) { $sshAgent } else { Find-Ssh('ssh-agent') }
         if (!$sshAgent) {
             if (!$Quiet) {

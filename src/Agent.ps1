@@ -82,7 +82,7 @@ function Start-SshAgent {
     if ($env:GIT_SSH -imatch 'plink') {
         Write-Host "GIT_SSH set to $($env:GIT_SSH), using Pageant as SSH agent."
 
-        $pageant = Get-Command pageant -TotalCount 1 -Erroraction SilentlyContinue
+        $pageant = Get-Command pageant -CommandType Application -TotalCount 1 -Erroraction SilentlyContinue
         $pageant = if ($pageant) { $pageant } else { Find-Pageant }
         if (!$pageant) {
             if (!$Quiet) {
@@ -94,7 +94,7 @@ function Start-SshAgent {
         Start-Process -NoNewWindow $pageant
     }
     else {
-        $sshAgent = Get-Command ssh-agent -TotalCount 1 -ErrorAction SilentlyContinue
+        $sshAgent = Get-Command ssh-agent -CommandType Application -TotalCount 1 -ErrorAction SilentlyContinue
         $sshAgent = if ($sshAgent) { $sshAgent } else { Find-Ssh('ssh-agent') }
         if (!$sshAgent) {
             if (!$Quiet) {

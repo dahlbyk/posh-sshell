@@ -45,7 +45,7 @@ function Start-NativeSshAgent([switch]$Quiet, [string]$StartupType = 'Manual') {
 
     if ($configuredSshCommand) {
         # If it's already set to something else, warn the user.
-        if ($configuredSshCommand -ne $sshCommand) {
+        if (($configuredSshCommand  -replace '^''(.*)''$', '$1') -ne ($sshCommand -replace '^''(.*)''$', '$1')) {
             Write-Warning "core.sshCommand in your .gitconfig is set to $configuredSshCommand, but it should be set to $sshCommand."
         }
     }
@@ -53,7 +53,7 @@ function Start-NativeSshAgent([switch]$Quiet, [string]$StartupType = 'Manual') {
         if (!$Quiet) {
             Write-Host "Setting core.sshCommand to $sshCommand in .gitconfig"
         }
-        $sshCommand = "`"$sshCommand`""
+        $sshCommand = "`"'$sshCommand'`""
         git config --global core.sshCommand $sshCommand
     }
 

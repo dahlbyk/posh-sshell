@@ -161,6 +161,24 @@ Describe 'SSH Function Tests' {
                 "$args" -eq 'config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"'
             } -Scope It
         }
+
+        It "Doesn't set the sshCommand in .gitconfig if GIT_SSH env var is set" {
+            $env:GIT_SSH = 'C:/Program Files/OpenSSH-Win64/ssh.exe'
+            $service.Status = "Running"
+
+            Mock git { return "C:/Windows/System32/OpenSSH/ssh.exe" } -ParameterFilter {
+                "$args" -eq "config --global core.sshCommand"
+            }
+
+            $result = Start-NativeSshAgent -Quiet
+
+            Assert-MockCalled git -Times 0 -Exactly -ParameterFilter {
+                "$args" -eq 'config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"'
+            } -Scope It
+
+            Remove-Item env:\GIT_SSH
+        }
+
         It "Stops the service" {
             $service.Status = "Running"
             Mock Stop-Service { $service.Status = "Stopped" } -ParameterFilter { $Name -eq "ssh-agent" }

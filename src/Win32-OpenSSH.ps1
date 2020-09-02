@@ -39,22 +39,29 @@ function Start-NativeSshAgent([switch]$Quiet, [string]$StartupType = 'Manual') {
         Start-Service "ssh-agent"
     }
 
-    # Make sure git is configured to use OpenSSH-Win32
-    $sshCommand = (Get-Command ssh.exe -ErrorAction Ignore | Select-Object -ExpandProperty Path).Replace("\", "/")
-    $configuredSshCommand = git config --global core.sshCommand
-
-    if ($configuredSshCommand) {
-        # If it's already set to something else, warn the user.
-        if ($configuredSshCommand -ne $sshCommand) {
-            Write-Warning "core.sshCommand in your .gitconfig is set to $configuredSshCommand, but it should be set to $sshCommand."
+    if ($env:GIT_SSH) {
+        if (!$Quiet) {
+            Write-Host "GIT_SSH is set, not setting core.sshCommand in .gitconfig"
         }
     }
     else {
-        if (!$Quiet) {
-            Write-Host "Setting core.sshCommand to $sshCommand in .gitconfig"
+        # Make sure git is configured to use OpenSSH-Win32
+        $sshCommand = (Get-Command ssh.exe -ErrorAction Ignore | Select-Object -ExpandProperty Path).Replace("\", "/")
+        $configuredSshCommand = git config --global core.sshCommand
+
+        if ($configuredSshCommand) {
+            # If it's already set to something else, warn the user.
+            if ($configuredSshCommand -ne $sshCommand) {
+                Write-Warning "core.sshCommand in your .gitconfig is set to $configuredSshCommand, but it should be set to $sshCommand."
+            }
         }
-        $sshCommand = "`"$sshCommand`""
-        git config --global core.sshCommand $sshCommand
+        else {
+            if (!$Quiet) {
+                Write-Host "Setting core.sshCommand to $sshCommand in .gitconfig"
+            }
+            $sshCommand = "`"$sshCommand`""
+            git config --global core.sshCommand $sshCommand
+        }
     }
 
     Add-SshKey -Quiet:$Quiet

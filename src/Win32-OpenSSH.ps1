@@ -47,6 +47,7 @@ function Start-NativeSshAgent([switch]$Quiet, [string]$StartupType = 'Manual') {
     else {
         # Make sure git is configured to use OpenSSH-Win32
         $sshCommand = (Get-Command ssh.exe -ErrorAction Ignore | Select-Object -ExpandProperty Path).Replace("\", "/")
+        $sshCommand = "`"$sshCommand`""
         $configuredSshCommand = git config --global core.sshCommand
 
         if ($configuredSshCommand) {
@@ -59,7 +60,6 @@ function Start-NativeSshAgent([switch]$Quiet, [string]$StartupType = 'Manual') {
             if (!$Quiet) {
                 Write-Host "Setting core.sshCommand to $sshCommand in .gitconfig"
             }
-            $sshCommand = "`"$sshCommand`""
             git config --global core.sshCommand $sshCommand
         }
     }
